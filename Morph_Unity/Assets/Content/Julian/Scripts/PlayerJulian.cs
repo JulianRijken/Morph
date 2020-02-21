@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Morph.Julian
@@ -14,9 +15,14 @@ namespace Morph.Julian
 
         [Header("Movement")]
         [SerializeField] private float m_maxStrafeSpeed;
+        [SerializeField] private float m_gravityForce;
         [SerializeField] private float m_accelerateSpeed;
         [SerializeField] private float m_deccelerateSpeed;
         [SerializeField] private float m_slopeLimit;
+        [SerializeField] private float m_slopeSlowDownSpeed;
+        [SerializeField] private float m_jumpTime;
+        [SerializeField] private float m_jumpStrength;
+        [SerializeField] private AnimationCurve m_jumpCurve;
 
         private Rigidbody2D m_rigidbody2D;
         private BoxCollider2D m_boxCollider2D;
@@ -24,6 +30,8 @@ namespace Morph.Julian
         private float m_strafeInput;
         private float m_smoothStrave;
         private float m_gravity;
+        private float m_jumpForce;
+        private bool m_canJump;
         private Vector2 m_slideVelocity;
         private Vector2 m_velocity;
 
@@ -40,48 +48,64 @@ namespace Morph.Julian
 
         public void OnJump(InputAction.CallbackContext context)
         {
+            StartCoroutine(JumpCourutine());
+        }
 
+        private IEnumerator JumpCourutine()
+        {
+
+            float timer = 0;
+            while (timer <= m_jumpTime)
+            {
+                m_jumpForce = m_jumpCurve.Evaluate(timer / m_jumpTime) * m_jumpStrength;
+                timer += Time.deltaTime;
+                //Debug.Log(m_jumpForce);
+                yield return new WaitForEndOfFrame();
+            }
+
+            Debug.Log("Jump Eind");
         }
 
         private void FixedUpdate()
         {
             RaycastHit2D hit = GroundCheck();
             float angle = Vector2.Angle(hit.normal,Vector2.up);
-            m_gravity += 8 * Time.fixedDeltaTime;
+            m_gravity += m_gravityForce * Time.fixedDeltaTime;
 
             // if on ground
             if (hit.collider != null && hit.distance < 0.5f)
             {
+
 
                 // if on slope
                 if (angle > m_slopeLimit)
                 {
                     if (hit.normal.x > 0)
                     {
-                        //m_smoothStrave = Mathf.Clamp(m_smoothStrave, 0, 1 * m_maxStrafeSpeed);
-                        //m_strafeInput = Mathf.Clamp(m_strafeInput, 0, 1);
-                        m_strafeInput = 0;
+                        m_strafeInput = Mathf.Clamp(m_strafeInput, 0, 1);
+                        //m_strafeInput = 0;
 
-                        m_slideVelocity -= (Vector2)(10 * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
+                        m_slideVelocity -= (Vector2)(m_gravityForce * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
                     }
                     else
                     {
-                        //m_smoothStrave = Mathf.Clamp(m_smoothStrave, -1 * m_maxStrafeSpeed, 0);
-                        //m_strafeInput = Mathf.Clamp(m_strafeInput, -1, 0);
-                        m_strafeInput = 0;
+                        m_strafeInput = Mathf.Clamp(m_strafeInput, -1, 0);
+                        //m_strafeInput = 0;
 
-                        m_slideVelocity += (Vector2)(10 * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
+                        m_slideVelocity += (Vector2)(m_gravityForce * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
                     }
                 }
                 else
                 {
+
                     // Set the player to the ground
                     if (hit.distance <= 0.05f)
                     {
                         m_gravity = 0;
-                        m_slideVelocity = Vector2.MoveTowards(m_slideVelocity, Vector2.zero, Time.deltaTime * 5f);
+                        m_slideVelocity = Vector2.Lerp(m_slideVelocity, Vector2.zero, Time.fixedDeltaTime * m_slopeSlowDownSpeed);
                     }
                 }
+
 
 
                 m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * (m_strafeInput == 0 ? m_deccelerateSpeed : m_accelerateSpeed));
@@ -92,12 +116,12 @@ namespace Morph.Julian
             else // if in air
             {
                 m_velocity.y = 0;
-                m_smoothStrave = Mathf.Lerp(m_smoothStrave, 0, Time.deltaTime * 5f);
+                m_smoothStrave = Mathf.Lerp(m_smoothStrave, 0, Time.deltaTime * 4f);
                 m_velocity.x = m_smoothStrave;
             }
 
 
-            m_rigidbody2D.velocity = m_velocity + (Vector2.down * m_gravity) + m_slideVelocity;
+            m_rigidbody2D.velocity = m_velocity  + m_slideVelocity + (Vector2.down * (m_canJump ? m_jumpForce : m_gravity));
 
         }
 
