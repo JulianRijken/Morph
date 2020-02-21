@@ -7,6 +7,7 @@ namespace Morph.Julian
     public class PlayerJulian : MonoBehaviour
     {
 
+
         [Header("Collition")]
         [SerializeField] private float m_groundCheckDistance;
         [SerializeField] private LayerMask m_groundLayer;
@@ -23,6 +24,7 @@ namespace Morph.Julian
         private float m_strafeInput;
         private float m_smoothStrave;
         private float m_gravity;
+        private Vector2 m_slideVelocity;
         private Vector2 m_velocity;
 
         private void Start()
@@ -45,36 +47,60 @@ namespace Morph.Julian
         {
             RaycastHit2D hit = GroundCheck();
             float angle = Vector2.Angle(hit.normal,Vector2.up);
-            //float angleMoveSpeed = Mathf.Lerp(1, 0, angle / 90f);
-            m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed,Time.fixedDeltaTime * (m_strafeInput == 0 ? m_deccelerateSpeed :  m_accelerateSpeed));
+            m_gravity += 8 * Time.fixedDeltaTime;
 
-            Debug.DrawLine(transform.position, hit.point);
-
-
-            if (angle > m_slopeLimit)
+            // if on ground
+            if (hit.collider != null && hit.distance < 0.5f)
             {
-                if(hit.normal.x > 0)
-                    m_smoothStrave = Mathf.Clamp(m_smoothStrave, 0, 1);
+
+                // if on slope
+                if (angle > m_slopeLimit)
+                {
+                    if (hit.normal.x > 0)
+                    {
+                        //m_smoothStrave = Mathf.Clamp(m_smoothStrave, 0, 1 * m_maxStrafeSpeed);
+                        //m_strafeInput = Mathf.Clamp(m_strafeInput, 0, 1);
+                        m_strafeInput = 0;
+
+                        m_slideVelocity -= (Vector2)(10 * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
+                    }
+                    else
+                    {
+                        //m_smoothStrave = Mathf.Clamp(m_smoothStrave, -1 * m_maxStrafeSpeed, 0);
+                        //m_strafeInput = Mathf.Clamp(m_strafeInput, -1, 0);
+                        m_strafeInput = 0;
+
+                        m_slideVelocity += (Vector2)(10 * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
+                    }
+                }
                 else
-                    m_smoothStrave = Mathf.Clamp(m_smoothStrave, -1, 0);
-            }
+                {
+                    // Set the player to the ground
+                    if (hit.distance <= 0.05f)
+                    {
+                        m_gravity = 0;
+                        m_slideVelocity = Vector2.MoveTowards(m_slideVelocity, Vector2.zero, Time.deltaTime * 5f);
+                    }
+                }
 
-            if (hit.collider != null && hit.distance < 0.1f)
-            {
-       
-                m_velocity = -m_smoothStrave * (Quaternion.Euler(0, 0, 90f) * hit.normal);
-                m_gravity = 0;
+
+                m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * (m_strafeInput == 0 ? m_deccelerateSpeed : m_accelerateSpeed));
+                m_velocity = (Vector2)(-m_smoothStrave * (Quaternion.Euler(0, 0, 90f) * hit.normal));
+
+
             }
-            else
+            else // if in air
             {
                 m_velocity.y = 0;
+                m_smoothStrave = Mathf.Lerp(m_smoothStrave, 0, Time.deltaTime * 5f);
                 m_velocity.x = m_smoothStrave;
-                m_gravity += 8 * Time.fixedDeltaTime;
             }
 
-            m_rigidbody2D.velocity = m_velocity + (Vector2.down * m_gravity);
+
+            m_rigidbody2D.velocity = m_velocity + (Vector2.down * m_gravity) + m_slideVelocity;
 
         }
+
 
         private RaycastHit2D GroundCheck()
         {     
