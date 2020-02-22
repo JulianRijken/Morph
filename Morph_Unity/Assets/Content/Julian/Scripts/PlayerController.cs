@@ -4,8 +4,15 @@ using UnityEngine.InputSystem;
 
 namespace Morph.Julian
 {
+
+    //===== PlayerController made by Julian Rijken ====\\
+    // Todo fix: 
+    // Head Collision for Jumping
+    // Wierd bounce when jumping up against steep slopes
+    // Input stopping when up against slopes without bouncing when running against slopes
+
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PlayerJulian : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
 
         [Header("Collition")]
@@ -15,6 +22,7 @@ namespace Morph.Julian
         [Header("Movement")]
         [SerializeField] private float m_maxStrafeSpeed;
         [SerializeField] private float m_gravityForce;
+        [SerializeField] private float m_slideDrag;
         [SerializeField] private float m_accelerateSpeed;
         [SerializeField] private float m_deccelerateSpeed;
         [SerializeField] private float m_slopeLimit;
@@ -31,6 +39,7 @@ namespace Morph.Julian
         private float m_gravity;
         private float m_jumpForce;
         private bool m_inJump;
+        private bool m_jumpAllowed;
         private float m_jumpTime = 0f;
         private Vector2 m_slideVelocity;
         private Vector2 m_inputVelocity;
@@ -48,6 +57,9 @@ namespace Morph.Julian
         {
             RaycastHit2D hit = GroundCheck();
             float angle = Vector2.Angle(hit.normal,Vector2.up);
+
+            bool isAccelerating = (m_smoothStrave > 0f && m_strafeInput > 0f) || (m_smoothStrave < 0f && m_strafeInput < 0f) ? true : false;
+
             m_gravity += m_gravityForce * Time.fixedDeltaTime;
 
             // if on ground
@@ -57,56 +69,56 @@ namespace Morph.Julian
                 // if on slope
                 if (angle > m_slopeLimit)
                 {
+                    m_jumpAllowed = false;
+
                     if (hit.normal.x > 0)
                     {
                         m_strafeInput = Mathf.Clamp(m_strafeInput, 0, 1);
-                        //m_strafeInput = 0;
 
-                        m_slideVelocity -= (Vector2)(m_gravityForce * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
+                        if (m_strafeInput == 0)
+                            m_slideVelocity -= (Vector2)((m_gravityForce / m_slideDrag) * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
                     }
                     else
                     {
                         m_strafeInput = Mathf.Clamp(m_strafeInput, -1, 0);
-                        //m_strafeInput = 0;
 
-                        m_slideVelocity += (Vector2)(m_gravityForce * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
+                        if (m_strafeInput == 0)                  
+                            m_slideVelocity += (Vector2)((m_gravityForce / m_slideDrag) * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;                   
                     }
+
                 }
                 else
                 {
+                    m_jumpAllowed = true;
 
                     // Set the player to the ground
                     if (hit.distance <= 0.05f)
                     {
-                        if (m_jumpTime > 0.1f)
-                            CancelJump();
-
                         m_gravity = 0;
                         m_slideVelocity = Vector2.Lerp(m_slideVelocity, Vector2.zero, Time.fixedDeltaTime * m_slopeSlowDownSpeed);
                     }
                 }
 
 
-                m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * (m_strafeInput == 0 ? m_deccelerateSpeed : m_accelerateSpeed));
+                if (m_jumpTime > 0.1f)
+                    CancelJump();
 
-
-                //Debug.Log(moveVelocityX);
-                //Debug.DrawLine(transform.position, (Vector2)transform.position + (Vector2.right * moveVelocityX), isAccelerating ? Color.red : Color.green);
-
+                m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * (isAccelerating ? m_accelerateSpeed : m_deccelerateSpeed));
                 m_inputVelocity = (Vector2)(-m_smoothStrave * (Quaternion.Euler(0, 0, 90f) * hit.normal));
 
             }
             else // if in air
             {
-                //m_smoothStrave = Mathf.Lerp(m_smoothStrave, 0, Time.deltaTime * 4f);
-                m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * 10f);
+                m_jumpAllowed = false;
+
+                m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * (isAccelerating ? m_accelerateSpeed : m_deccelerateSpeed));
+                m_inputVelocity.x = m_smoothStrave;
 
                 m_inputVelocity.y = 0;
-                m_inputVelocity.x = m_smoothStrave;
             }
 
-
-            m_rigidbody2D.velocity = m_inputVelocity  + m_slideVelocity + (Vector2.down * (m_inJump ? m_jumpForce : m_gravity));
+            Debug.DrawLine(transform.position, (Vector2)transform.position + Vector2.right * m_smoothStrave, isAccelerating ? Color.red : Color.green);
+            m_rigidbody2D.velocity = m_inputVelocity + m_slideVelocity + (Vector2.down * (m_inJump ? m_jumpForce : m_gravity));
 
         }
 
@@ -117,17 +129,15 @@ namespace Morph.Julian
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if(context.performed)
-                if(!m_inJump)
+            if(context.performed && m_jumpAllowed && !m_inJump)
                     StartCoroutine(JumpCourutine());
         }
-
 
         private void CancelJump()
         {
             if (m_inJump)
             {
-                StopCoroutine(JumpCourutine());
+                m_gravity = m_jumpForce;
                 m_inJump = false;
             }
         }
@@ -137,16 +147,15 @@ namespace Morph.Julian
             m_inJump = true;
             m_jumpTime = 0f;
 
-            while (m_jumpTime <= m_jumplength)
+            while (m_jumpTime <= m_jumplength && m_inJump == true)
             {
                 //Debug.Log(m_jumpTime);
                 m_jumpForce = m_jumpCurve.Evaluate(m_jumpTime / m_jumplength) * m_jumpStrength;
                 m_jumpTime += Time.deltaTime;
-
                 yield return new WaitForEndOfFrame();
             }
 
-            m_inJump = false;
+            CancelJump();
         }
 
         private RaycastHit2D GroundCheck()
