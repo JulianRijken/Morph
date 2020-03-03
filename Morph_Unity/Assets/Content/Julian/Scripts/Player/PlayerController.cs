@@ -29,6 +29,7 @@ namespace Morph.Julian
         [SerializeField] private float m_slopeSlowDownSpeed;
         [SerializeField] private float m_jumplength;
         [SerializeField] private float m_jumpStrength;
+        [SerializeField] private float m_jumpMidTime;
         [SerializeField] private AnimationCurve m_jumpCurve;
 
         private Rigidbody2D m_rigidbody2D;
@@ -149,8 +150,9 @@ namespace Morph.Julian
 
             while (m_jumpTime <= m_jumplength && m_inJump == true)
             {
-                //Debug.Log(m_jumpTime);
-                m_jumpForce = m_jumpCurve.Evaluate(m_jumpTime / m_jumplength) * m_jumpStrength;
+                float time = m_jumpTime / m_jumplength;
+                Debug.Log(time);
+                m_jumpForce = m_jumpCurve.Evaluate(time) * m_jumpStrength * (time >= m_jumpMidTime ? -1 : 1);
                 m_jumpTime += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
