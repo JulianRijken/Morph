@@ -27,8 +27,9 @@ namespace Morph.Julian
         [SerializeField] private float m_deccelerateSpeed;
         [SerializeField] private float m_slopeLimit;
         [SerializeField] private float m_slopeSlowDownSpeed;
+        [SerializeField] private float m_slopeJumpCancelForce;
         [SerializeField] private float m_jumplength;
-        [SerializeField] private float m_jumpStrength;
+        [SerializeField] private float m_jumpHeight;
         [SerializeField] private float m_jumpMidTime;
         [SerializeField] private AnimationCurve m_jumpCurve;
 
@@ -72,6 +73,8 @@ namespace Morph.Julian
                 {
                     m_jumpAllowed = false;
 
+                    //if(m_inJump) CancelJump();
+
                     if (hit.normal.x > 0)
                     {
                         m_strafeInput = Mathf.Clamp(m_strafeInput, 0, 1);
@@ -83,8 +86,8 @@ namespace Morph.Julian
                     {
                         m_strafeInput = Mathf.Clamp(m_strafeInput, -1, 0);
 
-                        if (m_strafeInput == 0)                  
-                            m_slideVelocity += (Vector2)((m_gravityForce / m_slideDrag) * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;                   
+                        if (m_strafeInput == 0)
+                            m_slideVelocity += (Vector2)((m_gravityForce / m_slideDrag) * (Quaternion.Euler(0, 0, 90f) * hit.normal)) * Time.fixedDeltaTime;
                     }
 
                 }
@@ -100,12 +103,15 @@ namespace Morph.Julian
                     }
                 }
 
-
-                if (m_jumpTime > 0.1f)
+                // if on ground and falling
+                if (m_jumpTime > m_jumpMidTime)
                     CancelJump();
 
+                if (angle > 0 && m_jumpTime > 0.1f)
+                    CancelJump(false, m_slopeJumpCancelForce);
+
                 m_smoothStrave = Mathf.MoveTowards(m_smoothStrave, m_strafeInput * m_maxStrafeSpeed, Time.fixedDeltaTime * (isAccelerating ? m_accelerateSpeed : m_deccelerateSpeed));
-                m_inputVelocity = (Vector2)(-m_smoothStrave * (Quaternion.Euler(0, 0, 90f) * hit.normal));
+                m_inputVelocity = (-m_smoothStrave * (Quaternion.Euler(0, 0, 90f) * hit.normal));
 
             }
             else // if in air
@@ -134,11 +140,17 @@ namespace Morph.Julian
                     StartCoroutine(JumpCourutine());
         }
 
-        private void CancelJump()
+        private void CancelJump(bool keepForce = true, float extraForce = 0)
         {
             if (m_inJump)
             {
-                m_gravity = m_jumpForce;
+                if (keepForce)
+                    m_gravity = m_jumpForce;
+                else
+                    m_gravity = 0;
+
+                m_gravity += extraForce;
+
                 m_inJump = false;
             }
         }
@@ -151,8 +163,8 @@ namespace Morph.Julian
             while (m_jumpTime <= m_jumplength && m_inJump == true)
             {
                 float time = m_jumpTime / m_jumplength;
-                Debug.Log(time);
-                m_jumpForce = m_jumpCurve.Evaluate(time) * m_jumpStrength * (time >= m_jumpMidTime ? -1 : 1);
+
+                m_jumpForce = Mathf.Lerp(1,0, m_jumpCurve.Evaluate(time)) * m_jumpHeight * (time <= m_jumpMidTime ? -1 : 1);
                 m_jumpTime += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }

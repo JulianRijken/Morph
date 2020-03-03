@@ -105,39 +105,41 @@ MonoBehaviour:
     m_Bits: 1
   m_maxStrafeSpeed: 10
   m_gravityForce: 20
-  m_slideDrag: 3
+  m_slideDrag: 3.5
   m_accelerateSpeed: 60
-  m_deccelerateSpeed: 100
+  m_deccelerateSpeed: 110
   m_slopeLimit: 50
   m_slopeSlowDownSpeed: 10
+  m_slopeJumpCancelForce: 3
   m_jumplength: 1
-  m_jumpStrength: -10
+  m_jumpHeight: 10
+  m_jumpMidTime: 0.5
   m_jumpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1.5
-      inSlope: -3
-      outSlope: -3
-      tangentMode: 34
+      value: 0
+      inSlope: 0.78361946
+      outSlope: 0.78361946
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
+      outWeight: 0.24197532
     - serializedVersion: 3
       time: 0.5
-      value: 0
-      inSlope: -0.4686997
-      outSlope: -0.4686997
+      value: 0.9999993
+      inSlope: -0.0032518092
+      outSlope: -0.0032518092
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.61649466
+      outWeight: 0.5737651
     - serializedVersion: 3
-      time: 1
-      value: -1
-      inSlope: -2
-      outSlope: -2
+      time: 0.8941994
+      value: 0.1480645
+      inSlope: -2.1611774
+      outSlope: -2.1611774
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
