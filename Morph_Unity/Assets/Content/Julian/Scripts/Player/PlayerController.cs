@@ -176,5 +176,11 @@ namespace Morph.Julian
         {     
            return Physics2D.BoxCast((Vector2)transform.position + m_boxCollider2D.offset, m_boxCollider2D.size, 0, Vector2.down, m_groundCheckDistance, m_groundLayer);
         }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if(collision.contacts[0].normal.y < 0f)
+                CancelJump(false);
+        }
     }
 }
