@@ -20,6 +20,8 @@ namespace com.Morph.Mechanics
 			{
 				Debug.LogWarning("Could not find the following Component: 'LineRenderer'", gameObject);
 			}
+			
+			_LineRenderer.positionCount = (_LinePoints.Length * 2);
 		}
 
 		void Update()
