@@ -1,25 +1,25 @@
 fileFormatVersion: 2
-guid: 9b87c63aefa5e8d459f1cf1cb05716ba
+guid: fc3a6829d4d75d04cb7f49d2ec300cab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6972398002328360529
-    second: Bird walk sprites_0
+      213: 5021468559252835808
+    second: Bird idle sprites_0
   - first:
-      213: 1421613397825931250
-    second: Bird walk sprites_1
+      213: 2084628116900731810
+    second: Bird idle sprites_1
   - first:
-      213: 8047799443821615268
-    second: Bird walk sprites_2
+      213: 4251435863768025500
+    second: Bird idle sprites_2
   - first:
-      213: 4860237365171871456
-    second: Bird walk sprites_3
+      213: -5143320630559095252
+    second: Bird idle sprites_3
   - first:
-      213: -5111849205660897413
-    second: Bird walk sprites_4
+      213: -5872591033522777843
+    second: Bird idle sprites_4
   - first:
-      213: 1470276360819240750
-    second: Bird walk sprites_5
+      213: -1637109852904248758
+    second: Bird idle sprites_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -104,127 +104,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bird walk sprites_0
+      name: Bird idle sprites_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 156dc61ba0fe2c060800000000000000
-      internalID: 6972398002328360529
+      spriteID: 0edce0dbc07dfa540800000000000000
+      internalID: 5021468559252835808
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird walk sprites_1
+      name: Bird idle sprites_1
       rect:
         serializedVersion: 2
         x: 587
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2f7c9517ad59ab310800000000000000
-      internalID: 1421613397825931250
+      spriteID: 2abd8ac3a361eec10800000000000000
+      internalID: 2084628116900731810
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird walk sprites_2
+      name: Bird idle sprites_2
       rect:
         serializedVersion: 2
         x: 1174
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4a8d29084f68faf60800000000000000
-      internalID: 8047799443821615268
+      spriteID: c99cf3d9462200b30800000000000000
+      internalID: 4251435863768025500
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird walk sprites_3
+      name: Bird idle sprites_3
       rect:
         serializedVersion: 2
         x: 1761
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0ee562b0228037340800000000000000
-      internalID: 4860237365171871456
+      spriteID: c26469113214f98b0800000000000000
+      internalID: -5143320630559095252
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird walk sprites_4
+      name: Bird idle sprites_4
       rect:
         serializedVersion: 2
         x: 2348
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b7f283f2b301f09b0800000000000000
-      internalID: -5111849205660897413
+      spriteID: d011bbfb19d508ea0800000000000000
+      internalID: -5872591033522777843
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird walk sprites_5
+      name: Bird idle sprites_5
       rect:
         serializedVersion: 2
         x: 2935
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e2fe8407f88776410800000000000000
-      internalID: 1470276360819240750
+      spriteID: a4aa9573341d749e0800000000000000
+      internalID: -1637109852904248758
       vertices: []
       indices: 
       edges: []
