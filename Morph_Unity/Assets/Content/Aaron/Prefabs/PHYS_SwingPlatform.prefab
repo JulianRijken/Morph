@@ -63,6 +63,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1180482093365028401}
   - component: {fileID: 1180482093365028399}
+  - component: {fileID: 869610063}
   m_Layer: 0
   m_Name: PHYS_SwingPlatform
   m_TagString: Untagged
@@ -182,6 +183,23 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &869610063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180482093365028400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bd9e6f7ef2a46c5ae0bbcb87e184b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _CenterPoint: {fileID: 1180482093068040479}
+  _LinePoints:
+  - {fileID: 1180482094637892495}
+  - {fileID: 1180482093800854789}
+  _LineRenderer: {fileID: 1180482093365028399}
 --- !u!1 &1180482093640735229
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +341,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1180482093917237674}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.66, z: 0}
+  m_LocalPosition: {x: 0, y: -3.094, z: 0}
   m_LocalScale: {x: 5, y: 0.25, z: 1}
   m_Children:
   - {fileID: 1180482094637892495}
@@ -420,8 +438,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
   m_Mass: 1.25
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 0.15
+  m_AngularDrag: 0.15
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -444,8 +462,8 @@ SpringJoint2D:
   m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
-  m_AutoConfigureDistance: 1
-  m_Distance: 2.66
+  m_AutoConfigureDistance: 0
+  m_Distance: 3
   m_DampingRatio: 0
   m_Frequency: 1
 --- !u!232 &315303386
@@ -464,8 +482,8 @@ DistanceJoint2D:
   m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
-  m_AutoConfigureDistance: 1
-  m_Distance: 2.46
+  m_AutoConfigureDistance: 0
+  m_Distance: 3
   m_MaxDistanceOnly: 1
 --- !u!1 &1180482094637892494
 GameObject:
