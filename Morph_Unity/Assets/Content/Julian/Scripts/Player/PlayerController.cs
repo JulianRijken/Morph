@@ -173,7 +173,7 @@ namespace Morph.Julian
         {
             if (collision.contactCount > 0)
             {
-                Debug.Log(Mathf.Abs(collision.contacts[0].normal.x));
+                //Debug.Log(Mathf.Abs(collision.contacts[0].normal.x));
 
                 if (Mathf.Abs(collision.contacts[0].normal.x) >= 0.7f)
                     m_smoothStrave = 0f;
