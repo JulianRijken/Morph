@@ -318,6 +318,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 419e0f5ec0282024c92590c6726b982c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _AnchorPoint: {fileID: 8592607453780578812}
+  _Platform: {fileID: 8592607453535131976}
+  _Animated: 0
+  _SwingSpeed: 0.1
+  _SwingAngle: {x: 0, y: 0, z: 100}
+  _Curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _CenterPoint: {fileID: 8592607453780578812}
   _LinePoints:
   - {fileID: 8592607454425607020}

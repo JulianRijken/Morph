@@ -9,6 +9,7 @@ public class SwingPlatform : MonoBehaviour
 	[SerializeField] bool _Animated;
 	[SerializeField] float _SwingSpeed;
 	[SerializeField] Vector3 _SwingAngle;
+	[SerializeField] AnimationCurve _Curve;
 
 	[Header("Line settings")]
 	[SerializeField] Transform _CenterPoint;
@@ -52,16 +53,17 @@ public class SwingPlatform : MonoBehaviour
 	//TODO Add damping
 	void SwingHandle()
 	{
-		_AnchorPoint.eulerAngles = Vector3.Lerp(-_SwingAngle, _SwingAngle, _T);
+		_AnchorPoint.eulerAngles = Vector3.Lerp(-_SwingAngle, _SwingAngle, Mathf.SmoothStep(0f, 1f, _T));
 		_Platform.localEulerAngles = _AnchorPoint.localEulerAngles * -1;
-		if (_T >= 1)
+
+		if (_T >= .75)
 		{
 			_SwingForward = false;
-		} else if (_T <= 0)
+		} else if (_T <= .25)
 		{
 			_SwingForward = true;
 		}
 		
-		_T = _SwingForward ? _T + Time.deltaTime * _SwingSpeed :_T - Time.deltaTime * _SwingSpeed;
+		_T = _SwingForward ? _T + Time.deltaTime * _SwingSpeed : _T - Time.deltaTime * _SwingSpeed;
 	}
 }
