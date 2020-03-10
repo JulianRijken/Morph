@@ -121,6 +121,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &315303381 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8592607453535131976, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
+    type: 3}
+  m_PrefabInstance: {fileID: 8592607453237935261}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &543812961 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8592607453780578812, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
+    type: 3}
+  m_PrefabInstance: {fileID: 8592607453237935261}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &614075537
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,6 +578,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8592607454088122063, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
+        type: 3}
+      propertyPath: _SwingAngle.z
+      value: -70
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592607454088122063, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
+        type: 3}
+      propertyPath: _AnchorPoint
+      value: 
+      objectReference: {fileID: 543812961}
+    - target: {fileID: 8592607454088122063, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
+        type: 3}
+      propertyPath: _SwingSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592607454088122063, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
+        type: 3}
+      propertyPath: _Platform
+      value: 
+      objectReference: {fileID: 315303381}
     - target: {fileID: 8592607454088122066, guid: 3b0b9a6bb6c484a41ae2a4f063b0bd29,
         type: 3}
       propertyPath: m_LocalPosition.x
