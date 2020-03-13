@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace com.Morph.Mechanics
 {
-	// [RequireComponent(typeof(Rigidbody2D))]
 	public class PhysicsSwing : MonoBehaviour
 	{
 		[Header("Line settings")]

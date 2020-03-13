@@ -19,8 +19,6 @@ namespace com.Morph.Mechanics
 		{
 			List<Collider2D> hits = Physics2D.OverlapBoxAll(transform.position, transform.localScale, 0,
 				_LayerMask).ToList();
-
-			print(hits.Count);
 			
 			hits.ForEach(col =>
 			{
