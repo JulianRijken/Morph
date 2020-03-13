@@ -5,27 +5,31 @@ namespace com.Morph.Game
 {
 	public class GameManager : MonoBehaviour
 	{
+		GameManagerSettings _Settingssss;
 		static GameManager _Instance;
 		int _CoinCount = 0;
+
 		public Action<int> _OnCoinAdded;
-		GameManagerSettings _Settings;
 		
 		public static GameManager GetInstance()
 		{
-			if (_Instance == null || !FindObjectOfType<GameManager>())
-			{
-				GameObject singletonObj = (GameObject)Instantiate(Resources.Load("GameManager"), Vector3.zero, Quaternion.identity, null);
-				_Instance = singletonObj.AddComponent<GameManager>();
-				singletonObj.name = typeof(GameManager).ToString() + " (Singleton)";
-				DontDestroyOnLoad(singletonObj);
+			if (Application.isPlaying) {
+				if (_Instance == null || !FindObjectOfType<GameManager>())
+				{
+					GameObject singletonObj = (GameObject) Instantiate(Resources.Load("GameManager"), Vector3.zero,
+						Quaternion.identity, null);
+					_Instance = singletonObj.AddComponent<GameManager>();
+					singletonObj.name = typeof(GameManager).ToString() + " (Singleton)";
+					DontDestroyOnLoad(singletonObj);
+				}
 			}
-
+			
 			return _Instance;
 		}
 
 		void Awake()
 		{
-			_Settings = Resources.Load<GameManagerSettings>("GameManager Settings");
+			_Settingssss = Resources.Load<GameManagerSettings>("GameManager Settings");
 		}
 
 		public void AddCoin()

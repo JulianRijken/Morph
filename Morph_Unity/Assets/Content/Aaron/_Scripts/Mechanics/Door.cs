@@ -8,8 +8,11 @@ namespace com.Morph.Mechanics
 	public class Door : MonoBehaviour
 	{
 		[SerializeField] int _CoinsRequired;
+
+		[Tooltip("If you want the On Coin Amount event to be run more then once, then uncheck this checkbox")]
 		[SerializeField] bool _InvokeOnce = true;
-		[SerializeField] UnityEvent _OnCoinAmmountReached;
+		[SerializeField] UnityEvent _OnCoinAmountReached;
+
 		public void Start()
 		{
 			GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
@@ -19,12 +22,12 @@ namespace com.Morph.Mechanics
 		{
 			if (amount == _CoinsRequired)
 			{
-				_OnCoinAmmountReached.Invoke();
+				_OnCoinAmountReached.Invoke();
 				if (_InvokeOnce)
 					GameManager.GetInstance()._OnCoinAdded -= OnCoinAdded;
 			}
 		}
-		
+
 		void OnDestroy()
 		{
 			GameManager.GetInstance()._OnCoinAdded -= OnCoinAdded;
