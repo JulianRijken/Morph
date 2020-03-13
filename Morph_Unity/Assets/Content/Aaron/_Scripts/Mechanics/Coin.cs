@@ -9,12 +9,7 @@ namespace com.Morph.Mechanics
 	public class Coin : MonoBehaviour
 	{
 		[SerializeField] float _Radius;
-
-		public void Start()
-		{
-			GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
-		}
-
+		
 		void Update()
 		{
 			List<Collider2D> hits = Physics2D.OverlapCircleAll(transform.position, _Radius).ToList();
@@ -33,16 +28,6 @@ namespace com.Morph.Mechanics
 				GameManager.GetInstance().AddCoin();
 				Destroy(gameObject);
 			}
-		}
-
-		void OnCoinAdded(int coins)
-		{
-			print(coins);
-		}
-
-		void OnDestroy()
-		{
-			GameManager.GetInstance()._OnCoinAdded -= OnCoinAdded;
 		}
 
 #if UNITY_EDITOR
