@@ -20,8 +20,8 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        m_startGameDirector.Play();
         m_mainMenuDirector.Stop();
+        m_startGameDirector.Play();
     }
 
     public void LoadMenu(int menu)
