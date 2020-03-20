@@ -51,7 +51,7 @@ namespace Morph.Julian
             m_playerSettings.Add(PlayerType.blob, m_blobMovementSettings);
             m_playerSettings.Add(PlayerType.bird, m_birdMovementSettings);
 
-            SetPlayeType(PlayerType.blob);
+            SetPlayeType(PlayerType.bird);
 
             if (Settings.m_jumplength <= 0f)
                 Settings.m_jumplength = 1f;
