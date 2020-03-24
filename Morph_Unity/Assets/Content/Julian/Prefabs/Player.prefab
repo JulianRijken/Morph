@@ -78,7 +78,7 @@ SpriteRenderer:
   m_Size: {x: 5.6, y: 4.87}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1573472897163747980
@@ -160,7 +160,7 @@ SpriteRenderer:
   m_Size: {x: 5.6, y: 4.87}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &7561808702992078765
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f04f86bea8753c47a744d2e590160cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_groundCheckDistance: 10
+  m_groundCheckDistance: 50
   m_groundLayer:
     serializedVersion: 2
     m_Bits: 1
