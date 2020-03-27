@@ -1,25 +1,22 @@
 fileFormatVersion: 2
-guid: fc3a6829d4d75d04cb7f49d2ec300cab
+guid: 9f0ce5fa283069e4ebcc741f179752a7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5021468559252835808
-    second: Bird idle sprites_0
+      213: 2601033064604266861
+    second: Birdtoball_spritesheet_0
   - first:
-      213: 2084628116900731810
-    second: Bird idle sprites_1
+      213: 1342432987095228673
+    second: Birdtoball_spritesheet_1
   - first:
-      213: 4251435863768025500
-    second: Bird idle sprites_2
+      213: -7270657978475745647
+    second: Birdtoball_spritesheet_2
   - first:
-      213: -5143320630559095252
-    second: Bird idle sprites_3
+      213: 8463494681116071300
+    second: Birdtoball_spritesheet_3
   - first:
-      213: -5872591033522777843
-    second: Bird idle sprites_4
-  - first:
-      213: -1637109852904248758
-    second: Bird idle sprites_5
+      213: 5890847021212791414
+    second: Birdtoball_spritesheet_4
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -104,127 +101,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bird idle sprites_0
+      name: Birdtoball_spritesheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 587
         height: 816
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5466853, y: 0.41604075}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0edce0dbc07dfa540800000000000000
-      internalID: 5021468559252835808
+      spriteID: d6178c89ac9b81420800000000000000
+      internalID: 2601033064604266861
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird idle sprites_1
+      name: Birdtoball_spritesheet_1
       rect:
         serializedVersion: 2
         x: 587
         y: 0
         width: 587
         height: 816
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5466852, y: 0.44752547}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2abd8ac3a361eec10800000000000000
-      internalID: 2084628116900731810
+      spriteID: 101e39270b741a210800000000000000
+      internalID: 1342432987095228673
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird idle sprites_2
+      name: Birdtoball_spritesheet_2
       rect:
         serializedVersion: 2
         x: 1174
         y: 0
         width: 587
         height: 816
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5291783, y: 0.4454265}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c99cf3d9462200b30800000000000000
-      internalID: 4251435863768025500
+      spriteID: 19ee795171f691b90800000000000000
+      internalID: -7270657978475745647
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird idle sprites_3
+      name: Birdtoball_spritesheet_3
       rect:
         serializedVersion: 2
         x: 1761
         y: 0
         width: 587
         height: 816
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.46206775, y: 0.4559214}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c26469113214f98b0800000000000000
-      internalID: -5143320630559095252
+      spriteID: 485d45a229f547570800000000000000
+      internalID: 8463494681116071300
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird idle sprites_4
+      name: Birdtoball_spritesheet_4
       rect:
         serializedVersion: 2
         x: 2348
         y: 0
         width: 587
         height: 816
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.51167136, y: 0.44752547}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d011bbfb19d508ea0800000000000000
-      internalID: -5872591033522777843
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bird idle sprites_5
-      rect:
-        serializedVersion: 2
-        x: 2935
-        y: 0
-        width: 587
-        height: 816
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a4aa9573341d749e0800000000000000
-      internalID: -1637109852904248758
+      spriteID: 6727e8d972e70c150800000000000000
+      internalID: 5890847021212791414
       vertices: []
       indices: 
       edges: []

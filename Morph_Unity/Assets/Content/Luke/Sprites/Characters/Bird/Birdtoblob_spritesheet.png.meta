@@ -1,34 +1,22 @@
 fileFormatVersion: 2
-guid: bbc0151f200ba2542941621c15cda8bf
+guid: fb5e929e2a779e241b956d2f3b647890
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4751082999511148510
-    second: Bird turn spritesheet_0
+      213: 7482084692846474215
+    second: Birdtoblob_spritesheet_0
   - first:
-      213: 1524420026685594176
-    second: Bird turn spritesheet_1
+      213: -2388470970441765136
+    second: Birdtoblob_spritesheet_1
   - first:
-      213: -3882060508337189173
-    second: Bird turn spritesheet_2
+      213: 8351394112533102052
+    second: Birdtoblob_spritesheet_2
   - first:
-      213: -6509418466576144578
-    second: Bird turn spritesheet_3
+      213: -8257504597913102891
+    second: Birdtoblob_spritesheet_3
   - first:
-      213: 1910960974597424334
-    second: Bird turn spritesheet_4
-  - first:
-      213: 4867233931520774732
-    second: Bird turn spritesheet_5
-  - first:
-      213: 7745160316208222126
-    second: Bird turn spritesheet_6
-  - first:
-      213: 5103407370668993435
-    second: Bird turn spritesheet_7
-  - first:
-      213: -5336956575865949989
-    second: Bird turn spritesheet_8
+      213: -2560321861749569650
+    second: Birdtoblob_spritesheet_4
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -113,190 +101,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bird turn spritesheet_0
+      name: Birdtoblob_spritesheet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.535014, y: 0.38455606}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed76244d0dc3fe140800000000000000
-      internalID: 4751082999511148510
+      spriteID: 7e37088e264b5d760800000000000000
+      internalID: 7482084692846474215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird turn spritesheet_1
+      name: Birdtoblob_spritesheet_1
       rect:
         serializedVersion: 2
         x: 587
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5437674, y: 0.37406114}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04a161300f3d72510800000000000000
-      internalID: 1524420026685594176
+      spriteID: 0fe6c7a9e427aded0800000000000000
+      internalID: -2388470970441765136
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird turn spritesheet_2
+      name: Birdtoblob_spritesheet_2
       rect:
         serializedVersion: 2
         x: 1174
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.54668534, y: 0.3656652}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bce4df32986202ac0800000000000000
-      internalID: -3882060508337189173
+      spriteID: 4edf2d0a2bc16e370800000000000000
+      internalID: 8351394112533102052
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird turn spritesheet_3
+      name: Birdtoblob_spritesheet_3
       rect:
         serializedVersion: 2
         x: 1761
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.45623228, y: 0.3446754}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e376c5d9466e9a5a0800000000000000
-      internalID: -6509418466576144578
+      spriteID: 5d51c3e7153776d80800000000000000
+      internalID: -8257504597913102891
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bird turn spritesheet_4
+      name: Birdtoblob_spritesheet_4
       rect:
         serializedVersion: 2
         x: 2348
         y: 0
         width: 587
         height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5087533, y: 0.3446754}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec48386b1e8158a10800000000000000
-      internalID: 1910960974597424334
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bird turn spritesheet_5
-      rect:
-        serializedVersion: 2
-        x: 2935
-        y: 0
-        width: 587
-        height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c4216071973eb8340800000000000000
-      internalID: 4867233931520774732
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bird turn spritesheet_6
-      rect:
-        serializedVersion: 2
-        x: 3522
-        y: 0
-        width: 587
-        height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: eaf0b00a5465c7b60800000000000000
-      internalID: 7745160316208222126
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bird turn spritesheet_7
-      rect:
-        serializedVersion: 2
-        x: 4109
-        y: 0
-        width: 587
-        height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b9be5d0f6f1f2d640800000000000000
-      internalID: 5103407370668993435
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bird turn spritesheet_8
-      rect:
-        serializedVersion: 2
-        x: 4696
-        y: 0
-        width: 587
-        height: 816
-      alignment: 4
-      pivot: {x: 0, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bd033d945425fe5b0800000000000000
-      internalID: -5336956575865949989
+      spriteID: e8700c7f4d8e77cd0800000000000000
+      internalID: -2560321861749569650
       vertices: []
       indices: 
       edges: []
