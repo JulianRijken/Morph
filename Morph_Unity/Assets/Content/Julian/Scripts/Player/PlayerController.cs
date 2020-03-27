@@ -17,8 +17,10 @@ namespace Morph.Julian
 
         [Header("Movement")]
         [SerializeField] private float m_strafeSpeed;
+        [SerializeField] private float m_gravityForce;
         private Vector2 m_velocity;
         private float m_gravity;
+        private bool m_inAir;
 
         [Header("Input")]
         private float m_strafeInput;
@@ -26,8 +28,13 @@ namespace Morph.Julian
         [Header("Collision")]
         [SerializeField] private float m_groundCheckDistance;
         [SerializeField] private LayerMask m_groundLayer;
+        [SerializeField] private float m_groundFether;
+        [SerializeField] private float m_groundMaxAngle;
         private float m_groundHitDistance;
+        private float m_groundHitAngle;
         private Vector2 m_groundOrgin { get => (Vector2)transform.position + m_boxCollider2D.offset; }
+
+        #region UnityFunctions
 
         private void Awake()
         {
@@ -41,6 +48,29 @@ namespace Morph.Julian
             MovementUpdate();
         }
 
+        private void Update()
+        {
+            HandleSpriteRotation();
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.contacts[0].normal.y < 0f)
+            {
+                m_gravity = 0;
+            }
+            else if (collision.contacts[0].normal.y > 0f)
+            {
+                m_inAir = false;
+            }
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+       
+        }
+
+        #endregion
 
         #region Input
         public void OnStrafe(InputAction.CallbackContext context)
@@ -56,17 +86,43 @@ namespace Morph.Julian
         }
         public void OnJump(InputAction.CallbackContext context)
         {
-            //if (context.performed && m_jumpAllowed && !m_inJump && Settings.m_canJump)
-            //    StartCoroutine(JumpCourutine());
+            if (context.performed && OnGround())            
+                DoJump();
+            
         }
+        public void OnAbility(InputAction.CallbackContext context)
+        {
+            if (context.performed && !OnGround() && !OnMaxSlope())
+                DoSmash();
+
+        }
+
         #endregion
 
+        #region Functions
+
+        private void HandleSpriteRotation()
+        {
+        }
+
+        private void DoJump()
+        {
+            m_gravity = 10;
+            m_inAir = true;
+        }
+
+        private void DoSmash()
+        {
+            Debug.Log("Do Smash");
+            m_gravity -= 20;
+            
+        }
 
         private void MovementUpdate()
         {
             // Get the ground hit
             RaycastHit2D hit = GroundCheck();
-            float angle = Vector2.Angle(hit.normal, Vector2.up);
+            m_groundHitAngle = Vector2.Angle(hit.normal, Vector2.up);
 
             // Get distance
             m_groundHitDistance = m_groundOrgin.y - hit.point.y - (m_boxCollider2D.size.y / 2f);
@@ -75,37 +131,63 @@ namespace Morph.Julian
             float strave = m_strafeInput;
             strave *= m_strafeSpeed;
 
-            // Apply gravity
-            m_gravity -= 9f * Time.fixedDeltaTime;
+            // Get Move Velocity
+            Vector2 straveVeclocity = Vector2.zero;
 
-            Vector2 dirVelocity = (strave * (Quaternion.Euler(0, 0, -90f) * hit.normal));
+            if (OnGround() && !OnMaxSlope())
+            {
+                // IF on ground
+                m_gravity = 0f;
+                straveVeclocity = (strave * (Quaternion.Euler(0, 0, -90f) * hit.normal));
+            }
+            else
+            {
+                // IF in air
 
-            Vector2 move = m_velocity + dirVelocity + (Vector2.up * m_gravity);
-            //m_rigidbody2D.velocity = move;
-            m_rigidbody2D.MovePosition(m_rigidbody2D.position + move * Time.fixedDeltaTime);
+                // Apply gravity
+                m_gravity -= m_gravityForce * Time.fixedDeltaTime;
+                straveVeclocity = Vector2.right * strave;
+            }
+
+
+    
+
+            Vector2 move = m_velocity + straveVeclocity + (Vector2.up * m_gravity);
+            m_rigidbody2D.velocity = move;
+            //m_rigidbody2D.MovePosition(m_rigidbody2D.position + move * Time.fixedDeltaTime);
             // ZORG DAT DE GRAVITY STOP ALS JE OP DE GROND STAAT 
 
 
 
-#if UNITY_EDITOR
+            #if UNITY_EDITOR
             // Debug
-            Debug.Log(m_rigidbody2D.velocity.y);
+            // Debug.Log(m_rigidbody2D.velocity.y);
+            // Debug.Log(OnMaxSlope());
             Debug.DrawLine(m_groundOrgin, hit.point,Color.red);
             Debug.DrawRay(transform.position,Vector2.right * strave);
             #endif
         }
 
+        #endregion
 
-        private void OnCollisionStay2D(Collision2D collision)
+        #region ReturnFuctions
+
+        private bool OnGround()
         {
-            if (m_groundHitDistance < 0.1f)
-                m_gravity = 0;
+            return (m_groundHitDistance < m_groundFether && m_inAir == false) ? true : false;
         }
 
+        private bool OnMaxSlope()
+        {
+            return (m_groundHitAngle > m_groundMaxAngle) ? true : false;
+        }
 
         private RaycastHit2D GroundCheck()
         {
             return Physics2D.BoxCast(m_groundOrgin, m_boxCollider2D.size, 0, Vector2.down, m_groundCheckDistance, m_groundLayer);
         }
+
+        #endregion
+
     }
 }
