@@ -2808,7 +2808,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391001705}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.18, y: 0.76, z: -29.640625}
+  m_LocalPosition: {x: -16.18, y: 0.76, z: 0}
   m_LocalScale: {x: 1.0778725, y: 0.817489, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3046,7 +3046,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1430463876}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.84, y: 0.08, z: -29.640625}
+  m_LocalPosition: {x: -17.84, y: 0.08, z: 0}
   m_LocalScale: {x: 4.872845, y: 0.24735199, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4978,7 +4978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2094361291}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.807, y: -0.857, z: -29.640625}
+  m_LocalPosition: {x: -17.807, y: -0.857, z: 0}
   m_LocalScale: {x: 0.27873608, y: 0.5893937, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5591,5 +5591,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5143302062968942059, guid: ffefb3f46e296d342a6b300dafff4818,
+        type: 3}
+      propertyPath: m_ballGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5143302062968942059, guid: ffefb3f46e296d342a6b300dafff4818,
+        type: 3}
+      propertyPath: m_drag
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5523573023048168520, guid: ffefb3f46e296d342a6b300dafff4818,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 5523573023048168520, guid: ffefb3f46e296d342a6b300dafff4818,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 28c3f3ed5fb59554a9ecc53ca755cb42, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ffefb3f46e296d342a6b300dafff4818, type: 3}

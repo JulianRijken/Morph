@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 5143302062968942059}
   - component: {fileID: 5143302062968942057}
   - component: {fileID: 5143302062968942055}
+  - component: {fileID: 5523573023048168520}
   - component: {fileID: 3427341614645652666}
   - component: {fileID: 5143302062968942054}
   m_Layer: 8
@@ -241,6 +242,7 @@ MonoBehaviour:
   m_spritesParent: {fileID: 5143302063122090672}
   m_strafeSpeed: 5
   m_gravityForce: 15
+  m_playerState: 0
   m_groundCheckDistance: 50
   m_groundLayer:
     serializedVersion: 2
@@ -294,6 +296,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0699167, y: 0.76399076}
   m_EdgeRadius: 0
+--- !u!58 &5523573023048168520
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5143302062968942058}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!95 &3427341614645652666
 Animator:
   serializedVersion: 3
