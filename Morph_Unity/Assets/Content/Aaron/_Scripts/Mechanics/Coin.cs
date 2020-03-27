@@ -18,14 +18,14 @@ namespace com.Morph.Mechanics
 			{
 				if (col.CompareTag("Player"))
 				{
-					GameManager.GetInstance().AddCoin();
+					GameManager.GetInstance(gameObject).AddCoin();
 					Destroy(gameObject);
 				}
 			});
 
 			if (Input.GetKeyDown(KeyCode.C))
 			{
-				GameManager.GetInstance().AddCoin();
+				GameManager.GetInstance(gameObject).AddCoin();
 				Destroy(gameObject);
 			}
 		}

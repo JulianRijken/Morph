@@ -11,11 +11,12 @@ namespace com.Morph.Mechanics
 
 		[Tooltip("If you want the On Coin Amount event to be run more then once, then uncheck this checkbox")]
 		[SerializeField] bool _InvokeOnce = true;
+
 		[SerializeField] UnityEvent _OnCoinAmountReached;
 
 		public void Start()
 		{
-			GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
+			GameManager.GetInstance(gameObject)._OnCoinAdded += OnCoinAdded;
 		}
 
 		void OnCoinAdded(int amount)
@@ -24,13 +25,8 @@ namespace com.Morph.Mechanics
 			{
 				_OnCoinAmountReached.Invoke();
 				if (_InvokeOnce)
-					GameManager.GetInstance()._OnCoinAdded -= OnCoinAdded;
+					GameManager.GetInstance(gameObject)._OnCoinAdded -= OnCoinAdded;
 			}
-		}
-
-		void OnDestroy()
-		{
-			GameManager.GetInstance()._OnCoinAdded -= OnCoinAdded;
 		}
 	}
 }

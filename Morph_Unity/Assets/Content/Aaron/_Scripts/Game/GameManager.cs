@@ -11,11 +11,12 @@ namespace com.Morph.Game
 
 		public Action<int> _OnCoinAdded;
 		
-		public static GameManager GetInstance()
+		public static GameManager GetInstance(GameObject a)
 		{
 			if (Application.isPlaying) {
 				if (_Instance == null || !FindObjectOfType<GameManager>())
 				{
+					Debug.Log($"Called by: {a.name}", a);
 					GameObject singletonObj = (GameObject) Instantiate(Resources.Load("GameManager"), Vector3.zero,
 						Quaternion.identity, null);
 					_Instance = singletonObj.AddComponent<GameManager>();
