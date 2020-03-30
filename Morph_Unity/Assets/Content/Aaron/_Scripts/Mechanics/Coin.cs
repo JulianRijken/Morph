@@ -18,16 +18,17 @@ namespace com.Morph.Mechanics
 			{
 				if (col.CompareTag("Player"))
 				{
-					GameManager.GetInstance(gameObject).AddCoin();
+					GameManager.GetInstance().AddCoin();
 					Destroy(gameObject);
 				}
 			});
 
 			if (Input.GetKeyDown(KeyCode.C))
 			{
-				GameManager.GetInstance(gameObject).AddCoin();
-				Destroy(gameObject);
+				GameManager.GetInstance().AddCoin();
+				// Destroy(gameObject);
 			}
+			
 		}
 
 #if UNITY_EDITOR

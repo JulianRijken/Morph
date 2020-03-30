@@ -16,7 +16,7 @@ namespace com.Morph.Mechanics
 
 		public void Start()
 		{
-			GameManager.GetInstance(gameObject)._OnCoinAdded += OnCoinAdded;
+			GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
 		}
 
 		void OnCoinAdded(int amount)
@@ -25,7 +25,7 @@ namespace com.Morph.Mechanics
 			{
 				_OnCoinAmountReached.Invoke();
 				if (_InvokeOnce)
-					GameManager.GetInstance(gameObject)._OnCoinAdded -= OnCoinAdded;
+					GameManager.GetInstance()._OnCoinAdded -= OnCoinAdded;
 			}
 		}
 	}

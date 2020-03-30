@@ -3,28 +3,32 @@ using com.Morph.Game;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UiCoin : MonoBehaviour
+public class CoinUiManager : MonoBehaviour
 {
-	Vector3 _TargetPosition;
-	float _T = 0;
-
-	void Update()
+	[SerializeField] GameObject _CoinUiPrefab;
+	[SerializeField] Vector2 _Offset;
+	[SerializeField] Transform _Spawn;
+	[SerializeField]Vector3[] _Corners = new Vector3[4];
+	List<CoinUi> _Coins = new List<CoinUi>();
+	void Start()
 	{
-		// if (Input.GetKeyDown(KeyCode.P))
-		// {
-		// 	SetNewPosition(Camera.main.WorldToScreenPoint(Vector3.right));
-		// }
-		//
-		// if (Vector3.Distance(_TargetPosition, transform.position) < .25)
-		// {
-		// 	transform.position = Vector3.Lerp(transform.position, _TargetPosition, _T);
-		// 	_T += Time.deltaTime;
-		// }
+		GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
 	}
-	
-	public void SetNewPosition(Vector3 screenPosition)
+
+	void OnCoinAdded(int newAmmount)
 	{
-		_T = 0;
-		_TargetPosition = screenPosition;
+		GetComponent<RectTransform>().GetWorldCorners(_Corners);
+		for (int i = 0; i < _Corners.Length; i++)
+		{
+			_Corners[i].y = 0;
+		}
+		
+		_Coins.Add(Instantiate(_CoinUiPrefab, _Spawn.position, Quaternion.identity, transform).GetComponent<CoinUi>());
+		for (int i = 0; i < newAmmount; i++)
+		{
+			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (newAmmount+1)) * (i+1));
+			targetPos.y = _Offset.y;
+			_Coins[i].SetNewPosition(targetPos);
+		}
 	}
 }
