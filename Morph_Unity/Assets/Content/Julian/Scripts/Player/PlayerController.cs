@@ -31,7 +31,8 @@ namespace Morph.Julian
 
         [Header("BirdMode")]
         [SerializeField] private float m_birdGravity;
-        [SerializeField] private float m_birdVelocity;
+        [SerializeField] private float m_birdAcceleration;
+        private float m_birdVelocity;
         private int m_birdMoveSide;
 
         [Header("Input")]
@@ -93,15 +94,16 @@ namespace Morph.Julian
         #region Input
         public void OnStrafe(InputAction.CallbackContext context)
         {
-            if (context.performed || context.canceled)
-            {
-                m_strafeInput = context.ReadValue<float>();
-                SwitchSide(m_strafeInput);
-            }
-            // zet bird switch op context. preformed en haal switch side weg!
-            if(context.performed)
+            m_strafeInput = context.ReadValue<float>();
+
+            if (context.performed)
             {
 
+                if (m_strafeInput > 0)             
+                    SwitchSide(1);              
+                else if (m_strafeInput < 0)
+                    SwitchSide(-1);
+                
             }
         }
         public void OnJump(InputAction.CallbackContext context)
@@ -142,7 +144,7 @@ namespace Morph.Julian
                 if (m_playerState == PlayerState.BlobBall)
                 {
                     Debug.Log(m_groundHitDistance);
-                    if(m_groundHitDistance > 2f)
+                    if(m_groundHitDistance > 1f)
                         SwitchMode(PlayerState.BirdAir);
                     else
                         SwitchMode(PlayerState.BlobGround);
@@ -159,24 +161,6 @@ namespace Morph.Julian
         {
         }
 
-        private void SwitchSide(float side)
-        {
-            Debug.Log(side);
-
-            Vector3 flipPos = m_spritesParent.localScale;
-            if (side > 0)
-            {
-                flipPos.x = 1;
-                m_birdMoveSide = 1;
-            }
-            else if (side < 0)
-            {
-                flipPos.x = -1;
-                m_birdMoveSide = -1;
-            }
-            m_spritesParent.localScale = flipPos;
-        }
-
         private void DoJump()
         {
             m_gravity = 10;
@@ -185,7 +169,16 @@ namespace Morph.Julian
 
         private void DoFlap()
         {
-            m_gravity += 5;
+            m_gravity = 7;
+        }
+
+        private void SwitchSide(int side)
+        {
+            side = Mathf.Clamp(side, -1, 1);
+            Vector3 flipPos = m_spritesParent.localScale;
+            flipPos.x = side;
+            m_birdMoveSide = side;
+            m_spritesParent.localScale = flipPos;
         }
 
         private void DoSmash()
@@ -216,11 +209,11 @@ namespace Morph.Julian
 
         private void BecomeBird()
         {
-            if(m_rigidbody2D.velocity.x > 0)           
-                SwitchSide(1);            
+            if (m_rigidbody2D.velocity.x > 0)
+                SwitchSide(1);
             else if (m_rigidbody2D.velocity.x < 0)
                 SwitchSide(-1);
-            
+
 
             //Debug.Log("Become Normal");
             m_blobBoxCollider2D.enabled = true;
@@ -229,7 +222,7 @@ namespace Morph.Julian
             m_rigidbody2D.gravityScale = 0;
             StartCoroutine(RotateBack());
             m_birdVelocity = m_rigidbody2D.velocity.x;
-            m_velocity = Vector2.up * m_rigidbody2D.velocity;
+            m_velocity = m_rigidbody2D.velocity * Vector2.up;
             m_gravity = 0f;
         }
 
@@ -302,9 +295,10 @@ namespace Morph.Julian
                 accelAmmount = Mathf.Abs(accelAmmount);
 
                 //Debug.Log(accelAmmount);
-                m_birdVelocity += accelAmmount * Time.fixedDeltaTime;
+                m_birdVelocity += accelAmmount * Time.fixedDeltaTime * m_birdAcceleration;
 
-                Vector2 move = m_velocity + (m_birdVelocity * Vector2.right * m_birdMoveSide) + (Vector2.up * m_gravity);
+                Debug.Log(m_birdMoveSide);
+                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * m_gravity);
 
                 m_rigidbody2D.velocity = move;
             }
