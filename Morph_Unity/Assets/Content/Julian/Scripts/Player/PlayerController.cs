@@ -28,12 +28,20 @@ namespace Morph.Julian
 
         [Header("BallMode")]
         [SerializeField] private float m_ballGravity;
+        [SerializeField] private float m_smashHeight;
 
         [Header("BirdMode")]
         [SerializeField] private float m_birdGravity;
         [SerializeField] private float m_birdAcceleration;
+        [SerializeField] private float m_flapHeight;
+        [SerializeField] private float m_becomeBirdHeight;
+        [SerializeField] private float m_flapDelayTime;
         private float m_birdVelocity;
         private int m_birdMoveSide;
+        private bool m_canFlap = true;
+
+        [Header("BlobMode")]
+        [SerializeField] private float m_blobRotateGroundCheckDistance;
 
         [Header("Input")]
         private float m_strafeInput;
@@ -56,6 +64,11 @@ namespace Morph.Julian
             m_blobBoxCollider2D = GetComponent<BoxCollider2D>();
             m_BallCircleCollider2D = GetComponent<CircleCollider2D>();
             m_animatior = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+            BecomeBlob();
         }
 
         private void FixedUpdate()
@@ -126,15 +139,8 @@ namespace Morph.Julian
 
                 if (m_playerState != PlayerState.BlobBall)
                 {
-                    if (m_playerState == PlayerState.BlobGround)
-                    {
-                        SwitchMode(PlayerState.BlobBall);
-                    }
-                    else
-                    {
-                        SwitchMode(PlayerState.BlobBall);
-                        DoSmash();
-                    }
+                    SwitchMode(PlayerState.BlobBall);
+                    DoSmash();
                 }
             }
             else if (context.canceled)
@@ -143,8 +149,7 @@ namespace Morph.Julian
 
                 if (m_playerState == PlayerState.BlobBall)
                 {
-                    Debug.Log(m_groundHitDistance);
-                    if(m_groundHitDistance > 1f)
+                    if(m_groundHitDistance > m_becomeBirdHeight)
                         SwitchMode(PlayerState.BirdAir);
                     else
                         SwitchMode(PlayerState.BlobGround);
@@ -159,7 +164,38 @@ namespace Morph.Julian
 
         private void HandleSpriteRotation()
         {
+            if (m_playerState == PlayerState.BlobGround)
+            {
+                Vector3 down = Vector2.down;
+
+                Vector2 lefCastOrgin = (Vector2)transform.position + (Vector2.left * m_blobBoxCollider2D.size.x / 2f);
+                RaycastHit2D leftHit = Physics2D.Raycast(lefCastOrgin, down, m_blobRotateGroundCheckDistance, m_groundLayer);
+
+                Vector2 rightCastOrgin = (Vector2)transform.position + (Vector2.right * m_blobBoxCollider2D.size.x / 2f);
+                RaycastHit2D rightHit = Physics2D.Raycast(rightCastOrgin, down, m_blobRotateGroundCheckDistance, m_groundLayer);
+
+                Vector2 middleCastOrgin = (Vector2)transform.position;
+                RaycastHit2D middleHit = Physics2D.Raycast(middleCastOrgin, down, m_blobRotateGroundCheckDistance, m_groundLayer);
+
+                Quaternion toRot = Quaternion.identity;
+
+                if (!(leftHit.collider == null || rightHit.collider == null || middleHit.collider == null))
+                {
+                    Vector2 normal = ((leftHit.normal / leftHit.distance) + (rightHit.normal / rightHit.distance) + (middleHit.normal / middleHit.distance)) / 3f;
+
+                    Debug.DrawRay(transform.position, normal.normalized, Color.green);
+
+                    toRot = Quaternion.LookRotation(Vector3.forward, normal.normalized);
+
+                    Debug.DrawLine(lefCastOrgin, leftHit.point);
+                    Debug.DrawLine(middleCastOrgin, middleHit.point);
+                    Debug.DrawLine(rightCastOrgin, rightHit.point);
+                }
+
+                transform.rotation = Quaternion.Slerp(transform.rotation,toRot,Time.deltaTime * 7f);
+            }
         }
+
 
         private void DoJump()
         {
@@ -169,7 +205,19 @@ namespace Morph.Julian
 
         private void DoFlap()
         {
-            m_gravity = 7;
+            if (m_canFlap == true)
+            {
+                if (m_groundHitDistance > m_flapHeight)
+                    m_gravity = 7;
+                StartCoroutine(FlapDelay());
+            }
+        }
+
+        private IEnumerator FlapDelay()
+        {
+            m_canFlap = false;
+            yield return new WaitForSeconds(m_flapDelayTime);
+            m_canFlap = true;
         }
 
         private void SwitchSide(int side)
@@ -183,6 +231,7 @@ namespace Morph.Julian
 
         private void DoSmash()
         {
+            if(m_groundHitDistance > m_smashHeight)
             m_rigidbody2D.AddForce(Vector2.down * 100, ForceMode2D.Impulse);     
         }
 
@@ -223,7 +272,7 @@ namespace Morph.Julian
             StartCoroutine(RotateBack());
             m_birdVelocity = m_rigidbody2D.velocity.x;
             m_velocity = m_rigidbody2D.velocity * Vector2.up;
-            m_gravity = 0f;
+            DoFlap();
         }
 
         private IEnumerator RotateBack()
@@ -247,15 +296,15 @@ namespace Morph.Julian
             float strave = m_strafeInput;
             strave *= m_strafeSpeed;
 
+            // Get the ground hit
+            RaycastHit2D hit = GroundCheck();
+            m_groundHitAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+            // Get distance
+            m_groundHitDistance = m_groundOrgin.y - hit.point.y - (m_blobBoxCollider2D.size.y / 2f);
+
             if (m_playerState == PlayerState.BlobGround || m_playerState == PlayerState.BlobAir)
             {
-
-                // Get the ground hit
-                RaycastHit2D hit = GroundCheck();
-                m_groundHitAngle = Vector2.Angle(hit.normal, Vector2.up);
-
-                // Get distance
-                m_groundHitDistance = m_groundOrgin.y - hit.point.y - (m_blobBoxCollider2D.size.y / 2f);
 
                 // Get Move Velocity
                 Vector2 straveVeclocity = Vector2.zero;
@@ -294,10 +343,8 @@ namespace Morph.Julian
                     accelAmmount = 0;
                 accelAmmount = Mathf.Abs(accelAmmount);
 
-                //Debug.Log(accelAmmount);
                 m_birdVelocity += accelAmmount * Time.fixedDeltaTime * m_birdAcceleration;
 
-                Debug.Log(m_birdMoveSide);
                 Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * m_gravity);
 
                 m_rigidbody2D.velocity = move;
@@ -327,6 +374,8 @@ namespace Morph.Julian
             m_animatior.SetInteger("PlayerState", (int)toState);
             m_playerState = toState;
         }
+
+
 
         private bool OnGround()
         {
