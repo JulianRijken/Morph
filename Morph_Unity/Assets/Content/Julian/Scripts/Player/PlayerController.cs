@@ -24,7 +24,7 @@ namespace Morph.Julian
         private float m_gravity;
         private bool m_holdingAbility;
 
-        private enum PlayerState {BlobGround, BlobAir, BlobBall, BirdAir }
+        private enum PlayerState {BlobGround, BlobAir, BlobBall, Bird }
 
         [Header("BallMode")]
         [SerializeField] private float m_ballGravity;
@@ -32,10 +32,11 @@ namespace Morph.Julian
 
         [Header("BirdMode")]
         [SerializeField] private float m_birdGravity;
-        [SerializeField] private float m_birdAcceleration;
         [SerializeField] private float m_flapHeight;
+        [SerializeField] private float m_birdMoveSpeed;
         [SerializeField] private float m_becomeBirdHeight;
         [SerializeField] private float m_flapDelayTime;
+        [SerializeField] private float m_birdAcceleration;
         private float m_birdVelocity;
         private int m_birdMoveSide;
         private bool m_canFlap = true;
@@ -69,6 +70,7 @@ namespace Morph.Julian
         private void Start()
         {
             BecomeBlob();
+            SwitchSide(1);
         }
 
         private void FixedUpdate()
@@ -125,9 +127,9 @@ namespace Morph.Julian
             {
                 if (OnGround())
                     DoJump();
-                else if (m_playerState != PlayerState.BirdAir)
-                    SwitchMode(PlayerState.BirdAir);
-                else if (m_playerState == PlayerState.BirdAir)
+                else if (m_playerState != PlayerState.Bird)
+                    SwitchMode(PlayerState.Bird);
+                else if (m_playerState == PlayerState.Bird)
                     DoFlap();
             }
         }
@@ -150,7 +152,7 @@ namespace Morph.Julian
                 if (m_playerState == PlayerState.BlobBall)
                 {
                     if(m_groundHitDistance > m_becomeBirdHeight)
-                        SwitchMode(PlayerState.BirdAir);
+                        SwitchMode(PlayerState.Bird);
                     else
                         SwitchMode(PlayerState.BlobGround);
                 }
@@ -194,6 +196,13 @@ namespace Morph.Julian
 
                 transform.rotation = Quaternion.Slerp(transform.rotation,toRot,Time.deltaTime * 7f);
             }
+            else if(m_playerState == PlayerState.Bird)
+            {
+                Quaternion toRot = Quaternion.LookRotation(Vector3.forward, m_rigidbody2D.velocity.normalized);
+                toRot *= Quaternion.Euler(0, 0, m_birdMoveSide > 0 ? 90f : -90f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRot, Time.deltaTime * 7f);
+            }
+
         }
 
 
@@ -209,6 +218,7 @@ namespace Morph.Julian
             {
                 if (m_groundHitDistance > m_flapHeight)
                     m_gravity = 7;
+
                 StartCoroutine(FlapDelay());
             }
         }
@@ -263,6 +273,7 @@ namespace Morph.Julian
             else if (m_rigidbody2D.velocity.x < 0)
                 SwitchSide(-1);
 
+            Debug.LogError("Zorg dat de bird ge fixed is en liniare naar beneden gaat maar wel kan flappen");
 
             //Debug.Log("Become Normal");
             m_blobBoxCollider2D.enabled = true;
@@ -332,20 +343,14 @@ namespace Morph.Julian
                 m_rigidbody2D.velocity = move;
 
             }
-            else if(m_playerState == PlayerState.BirdAir)
+            else if(m_playerState == PlayerState.Bird)
             {
 
                 m_gravity -= m_birdGravity * Time.fixedDeltaTime;
 
-                // Bird acceleration
-                float accelAmmount = m_rigidbody2D.velocity.y;
-                if (accelAmmount > 0)
-                    accelAmmount = 0;
-                accelAmmount = Mathf.Abs(accelAmmount);
+                m_birdVelocity = Mathf.MoveTowards(m_birdVelocity, m_birdMoveSpeed, Time.deltaTime * m_birdAcceleration);
 
-                m_birdVelocity += accelAmmount * Time.fixedDeltaTime * m_birdAcceleration;
-
-                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * m_gravity);
+                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * Mathf.Clamp(m_gravity,-6f,10f));
 
                 m_rigidbody2D.velocity = move;
             }
@@ -365,7 +370,7 @@ namespace Morph.Julian
             {
                 BecomeBall();
             }
-            else if (toState == PlayerState.BirdAir)
+            else if (toState == PlayerState.Bird)
             {
                 BecomeBird();
             }
