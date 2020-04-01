@@ -32,14 +32,16 @@ namespace Morph.Julian
 
         [Header("BirdMode")]
         [SerializeField] private float m_birdGravity;
-        [SerializeField] private float m_flapHeight;
+        [SerializeField] private float m_birdMaxGravity;
+        [SerializeField] private float m_birdFlapStrength;
+        [SerializeField] private float m_birdFlapHeight;
         [SerializeField] private float m_birdMoveSpeed;
-        [SerializeField] private float m_becomeBirdHeight;
-        [SerializeField] private float m_flapDelayTime;
+        [SerializeField] private float m_birdTransformHeight;
+        [SerializeField] private float m_birdFlapDelayTime;
         [SerializeField] private float m_birdAcceleration;
         private float m_birdVelocity;
         private int m_birdMoveSide;
-        private bool m_canFlap = true;
+        private bool m_birdCanFlap = true;
 
         [Header("BlobMode")]
         [SerializeField] private float m_blobRotateGroundCheckDistance;
@@ -151,7 +153,7 @@ namespace Morph.Julian
 
                 if (m_playerState == PlayerState.BlobBall)
                 {
-                    if(m_groundHitDistance > m_becomeBirdHeight)
+                    if(m_groundHitDistance > m_birdTransformHeight)
                         SwitchMode(PlayerState.Bird);
                     else
                         SwitchMode(PlayerState.BlobGround);
@@ -214,20 +216,18 @@ namespace Morph.Julian
 
         private void DoFlap()
         {
-            if (m_canFlap == true)
+            if (m_birdCanFlap == true && m_groundHitDistance > m_birdFlapHeight)
             {
-                if (m_groundHitDistance > m_flapHeight)
-                    m_gravity = 7;
-
+                m_gravity = m_birdFlapStrength;
                 StartCoroutine(FlapDelay());
             }
         }
 
         private IEnumerator FlapDelay()
         {
-            m_canFlap = false;
-            yield return new WaitForSeconds(m_flapDelayTime);
-            m_canFlap = true;
+            m_birdCanFlap = false;
+            yield return new WaitForSeconds(m_birdFlapDelayTime);
+            m_birdCanFlap = true;
         }
 
         private void SwitchSide(int side)
@@ -273,7 +273,6 @@ namespace Morph.Julian
             else if (m_rigidbody2D.velocity.x < 0)
                 SwitchSide(-1);
 
-            Debug.LogError("Zorg dat de bird ge fixed is en liniare naar beneden gaat maar wel kan flappen");
 
             //Debug.Log("Become Normal");
             m_blobBoxCollider2D.enabled = true;
@@ -345,6 +344,8 @@ namespace Morph.Julian
             }
             else if(m_playerState == PlayerState.Bird)
             {
+
+                Debug.LogError("Zorg dat de bird ge fixed is en liniare naar beneden gaat maar wel kan flappen");
 
                 m_gravity -= m_birdGravity * Time.fixedDeltaTime;
 
