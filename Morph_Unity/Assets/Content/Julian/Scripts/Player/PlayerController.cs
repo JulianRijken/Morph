@@ -21,6 +21,7 @@ namespace Morph.Julian
         [SerializeField] private PlayerState m_playerState;
         [SerializeField] private float m_drag;
         private Vector2 m_velocity;
+        private float m_lastRbVelocity;
         private float m_gravity;
         private bool m_holdingAbility;
 
@@ -29,22 +30,27 @@ namespace Morph.Julian
         [Header("BallMode")]
         [SerializeField] private float m_ballGravity;
         [SerializeField] private float m_smashHeight;
+        [SerializeField] private float m_smashStrength;
 
         [Header("BirdMode")]
         [SerializeField] private float m_birdGravity;
         [SerializeField] private float m_birdMaxGravity;
         [SerializeField] private float m_birdFlapStrength;
+        [SerializeField] private float m_birdStartFlapStrength;
         [SerializeField] private float m_birdFlapHeight;
         [SerializeField] private float m_birdMoveSpeed;
         [SerializeField] private float m_birdTransformHeight;
+        [SerializeField] private float m_birdTransformSpeed;
         [SerializeField] private float m_birdFlapDelayTime;
         [SerializeField] private float m_birdAcceleration;
+        [SerializeField] private float m_birdRotateSpeed;
         private float m_birdVelocity;
         private int m_birdMoveSide;
         private bool m_birdCanFlap = true;
 
         [Header("BlobMode")]
         [SerializeField] private float m_blobRotateGroundCheckDistance;
+        [SerializeField] private float m_blobRotateSpeed;
 
         [Header("Input")]
         private float m_strafeInput;
@@ -58,6 +64,12 @@ namespace Morph.Julian
         private float m_groundHitAngle;
         private Vector2 m_groundOrgin { get => (Vector2)transform.position + m_blobBoxCollider2D.offset; }
 
+        [Header("Animation")]
+        [SerializeField] private string m_playerStateKey;
+        [SerializeField] private string m_flapTriggerKey;
+        [SerializeField] private string m_straveInputKey;
+        [SerializeField] private string m_jumpKey;
+        [SerializeField] private string m_velocityKey;
 
         #region UnityFunctions
 
@@ -96,15 +108,10 @@ namespace Morph.Julian
                 if (m_playerState == PlayerState.BlobBall && m_holdingAbility)
                     return;
 
-                SwitchMode(PlayerState.BlobGround);
-                     
+                SwitchMode(PlayerState.BlobGround);                   
             }
         }
 
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-       
-        }
 
         #endregion
 
@@ -112,6 +119,7 @@ namespace Morph.Julian
         public void OnStrafe(InputAction.CallbackContext context)
         {
             m_strafeInput = context.ReadValue<float>();
+            m_animatior.SetFloat(m_straveInputKey, Mathf.Abs(m_strafeInput));
 
             if (context.performed)
             {
@@ -153,7 +161,7 @@ namespace Morph.Julian
 
                 if (m_playerState == PlayerState.BlobBall)
                 {
-                    if(m_groundHitDistance > m_birdTransformHeight)
+                    if(m_groundHitDistance > m_birdTransformHeight && m_rigidbody2D.velocity.magnitude > m_birdTransformSpeed)
                         SwitchMode(PlayerState.Bird);
                     else
                         SwitchMode(PlayerState.BlobGround);
@@ -196,22 +204,29 @@ namespace Morph.Julian
                     Debug.DrawLine(rightCastOrgin, rightHit.point);
                 }
 
-                transform.rotation = Quaternion.Slerp(transform.rotation,toRot,Time.deltaTime * 7f);
+                transform.rotation = Quaternion.Slerp(transform.rotation,toRot,Time.deltaTime * m_blobRotateSpeed);
             }
             else if(m_playerState == PlayerState.Bird)
             {
                 Quaternion toRot = Quaternion.LookRotation(Vector3.forward, m_rigidbody2D.velocity.normalized);
                 toRot *= Quaternion.Euler(0, 0, m_birdMoveSide > 0 ? 90f : -90f);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRot, Time.deltaTime * 7f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRot, Time.deltaTime * m_birdRotateSpeed);
             }
+            else if(m_playerState == PlayerState.BlobAir)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity, Time.deltaTime * m_blobRotateSpeed);
+            }
+
 
         }
 
 
         private void DoJump()
         {
+            m_animatior.SetTrigger(m_jumpKey);
             m_gravity = 10;
             SwitchMode(PlayerState.BlobAir);
+            RotateBack();
         }
 
         private void DoFlap()
@@ -219,6 +234,7 @@ namespace Morph.Julian
             if (m_birdCanFlap == true && m_groundHitDistance > m_birdFlapHeight)
             {
                 m_gravity = m_birdFlapStrength;
+                m_animatior.SetTrigger(m_flapTriggerKey);
                 StartCoroutine(FlapDelay());
             }
         }
@@ -241,8 +257,10 @@ namespace Morph.Julian
 
         private void DoSmash()
         {
-            if(m_groundHitDistance > m_smashHeight)
-            m_rigidbody2D.AddForce(Vector2.down * 100, ForceMode2D.Impulse);     
+            if (m_groundHitDistance > m_smashHeight)
+            {
+                m_rigidbody2D.AddForce(Vector2.down * m_smashStrength, ForceMode2D.Impulse);
+            }
         }
 
         private void BecomeBall()
@@ -280,8 +298,8 @@ namespace Morph.Julian
             m_rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
             m_rigidbody2D.gravityScale = 0;
             StartCoroutine(RotateBack());
-            m_birdVelocity = m_rigidbody2D.velocity.x;
-            m_velocity = m_rigidbody2D.velocity * Vector2.up;
+            m_birdVelocity = Mathf.Abs(m_rigidbody2D.velocity.x);
+            m_velocity = (m_rigidbody2D.velocity.y) > 0 ? (m_rigidbody2D.velocity * Vector2.up) : Vector2.zero;
             DoFlap();
         }
 
@@ -299,6 +317,9 @@ namespace Morph.Julian
 
         private void MovementUpdate()
         {
+            
+            m_animatior.SetFloat(m_velocityKey,Mathf.Abs(m_lastRbVelocity - m_rigidbody2D.velocity.magnitude));
+            m_lastRbVelocity = m_rigidbody2D.velocity.magnitude;
 
             m_velocity = Vector2.MoveTowards(m_velocity, Vector2.zero, Time.fixedDeltaTime * m_drag);
 
@@ -344,14 +365,11 @@ namespace Morph.Julian
             }
             else if(m_playerState == PlayerState.Bird)
             {
-
-                Debug.LogError("Zorg dat de bird ge fixed is en liniare naar beneden gaat maar wel kan flappen");
-
                 m_gravity -= m_birdGravity * Time.fixedDeltaTime;
 
-                m_birdVelocity = Mathf.MoveTowards(m_birdVelocity, m_birdMoveSpeed, Time.deltaTime * m_birdAcceleration);
+                m_birdVelocity = Mathf.MoveTowards(m_birdVelocity, m_birdMoveSpeed, Time.fixedDeltaTime * m_birdAcceleration);
 
-                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * Mathf.Clamp(m_gravity,-6f,10f));
+                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * Mathf.Clamp(m_gravity,m_birdMaxGravity,100f));
 
                 m_rigidbody2D.velocity = move;
             }
@@ -377,7 +395,7 @@ namespace Morph.Julian
             }
 
 
-            m_animatior.SetInteger("PlayerState", (int)toState);
+            m_animatior.SetInteger(m_playerStateKey, (int)toState);
             m_playerState = toState;
         }
 
