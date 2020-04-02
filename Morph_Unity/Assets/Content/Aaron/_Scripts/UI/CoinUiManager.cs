@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using com.Morph.Game;
 using UnityEngine;
@@ -12,6 +13,13 @@ public class CoinUiManager : MonoBehaviour
 	[SerializeField]Vector3[] _Corners = new Vector3[4];
 	Stack<CoinUi> _Coins = new Stack<CoinUi>();
 	Stack<CoinUi> _CoinsUse = new Stack<CoinUi>();
+
+	public static CoinUiManager Instance;
+	void Awake()
+	{
+		Instance = this;
+	}
+
 	void Start()
 	{
 		GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
@@ -36,25 +44,28 @@ public class CoinUiManager : MonoBehaviour
 
 	public bool UseCoin(Transform targetTransform)
 	{
-		if (_Coins.Peek() == null) return false;
+		if (_Coins.Count < 1) return false;
 		
 		_CoinsUse.Push(_Coins.Pop());
 		CoinUi ui = _CoinsUse.Peek();
 		ui.SetFollowTransform(targetTransform);
-
 		return true;
 	}
 	
 	public void ResetCoins()
 	{
+		GetComponent<RectTransform>().GetWorldCorners(_Corners);
+
 		for (int i = 0; i < _CoinsUse.Count; i++)
 		{
-			_Coins.Push(_CoinsUse.Pop());
+			_Coins.Push(_CoinsUse.ToList()[i]);
 		}
+		
+		_CoinsUse.Clear();
 		
 		for (int i = 0; i < _Coins.Count; i++)
 		{
-			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (_Coins.Count)) * (i+1));
+			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (_Coins.Count+1)) * (i+1));
 			targetPos.y = _Offset.y;
 			_Coins.ToList()[i].SetNewPosition(targetPos);
 		}
