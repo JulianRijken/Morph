@@ -402,7 +402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _CoinUiPrefab: {fileID: 2712634201757298012, guid: 438bf0dffb3505d49aa2523b30e41b9a,
     type: 3}
-  _Offset: {x: 0, y: 16}
+  _Offset: {x: 0, y: 32}
   _Spawn: {fileID: 1675729271}
   _Corners:
   - {x: 0, y: 0, z: 0}
