@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using com.Morph.Game;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +11,15 @@ public class CoinUiManager : MonoBehaviour
 	[SerializeField] Vector2 _Offset;
 	[SerializeField] Transform _Spawn;
 	[SerializeField]Vector3[] _Corners = new Vector3[4];
-	List<CoinUi> _Coins = new List<CoinUi>();
+	Stack<CoinUi> _Coins = new Stack<CoinUi>();
+	Stack<CoinUi> _CoinsUse = new Stack<CoinUi>();
+
+	public static CoinUiManager Instance;
+	void Awake()
+	{
+		Instance = this;
+	}
+
 	void Start()
 	{
 		GameManager.GetInstance()._OnCoinAdded += OnCoinAdded;
@@ -23,12 +33,49 @@ public class CoinUiManager : MonoBehaviour
 			_Corners[i].y = 0;
 		}
 		
-		_Coins.Add(Instantiate(_CoinUiPrefab, _Spawn.position, Quaternion.identity, transform).GetComponent<CoinUi>());
+		_Coins.Push(Instantiate(_CoinUiPrefab, _Spawn.position, Quaternion.identity, transform).GetComponent<CoinUi>());
 		for (int i = 0; i < newAmmount; i++)
 		{
 			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (newAmmount+1)) * (i+1));
 			targetPos.y = _Offset.y;
-			_Coins[i].SetNewPosition(targetPos);
+			_Coins.ToList()[i].SetNewPosition(targetPos);
+		}
+	}
+
+	public bool UseCoin(Transform targetTransform)
+	{
+		if (_Coins.Count < 1) return false;
+		
+		_CoinsUse.Push(_Coins.Pop());
+		CoinUi ui = _CoinsUse.Peek();
+		ui.SetFollowTransform(targetTransform);
+		
+		for (int i = 0; i < _Coins.Count; i++)
+		{
+			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (_Coins.Count+1)) * (i+1));
+			targetPos.y = _Offset.y;
+			_Coins.ToList()[i].SetNewPosition(targetPos);
+		}
+		
+		return true;
+	}
+	
+	public void ResetCoins()
+	{
+		GetComponent<RectTransform>().GetWorldCorners(_Corners);
+
+		for (int i = 0; i < _CoinsUse.Count; i++)
+		{
+			_Coins.Push(_CoinsUse.ToList()[i]);
+		}
+		
+		_CoinsUse.Clear();
+		
+		for (int i = 0; i < _Coins.Count; i++)
+		{
+			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (_Coins.Count+1)) * (i+1));
+			targetPos.y = _Offset.y;
+			_Coins.ToList()[i].SetNewPosition(targetPos);
 		}
 	}
 }
