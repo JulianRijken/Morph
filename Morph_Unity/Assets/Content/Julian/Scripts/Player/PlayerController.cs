@@ -90,10 +90,6 @@ namespace Morph.Julian
         private void FixedUpdate()
         {
             MovementUpdate();
-        }
-
-        private void Update()
-        {
             HandleSpriteRotation();
         }
 
@@ -204,17 +200,17 @@ namespace Morph.Julian
                     Debug.DrawLine(rightCastOrgin, rightHit.point);
                 }
 
-                transform.rotation = Quaternion.Slerp(transform.rotation,toRot,Time.deltaTime * m_blobRotateSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation,toRot,Time.fixedDeltaTime * m_blobRotateSpeed);
             }
             else if(m_playerState == PlayerState.Bird)
             {
                 Quaternion toRot = Quaternion.LookRotation(Vector3.forward, m_rigidbody2D.velocity.normalized);
                 toRot *= Quaternion.Euler(0, 0, m_birdMoveSide > 0 ? 90f : -90f);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRot, Time.deltaTime * m_birdRotateSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRot, Time.fixedDeltaTime * m_birdRotateSpeed);
             }
             else if(m_playerState == PlayerState.BlobAir)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity, Time.deltaTime * m_blobRotateSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity, Time.fixedDeltaTime * m_blobRotateSpeed);
             }
 
 
@@ -309,9 +305,9 @@ namespace Morph.Julian
             Quaternion oldRot = transform.rotation;
             while (time < 1f)
             {
-                time += Time.deltaTime * 4f;
+                time += Time.fixedDeltaTime * 4f;
                 transform.rotation = Quaternion.Slerp(oldRot, Quaternion.identity, time);
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
             }
         }
 
