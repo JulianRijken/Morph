@@ -27,6 +27,15 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode();
+        #endif
+    }
+
     public void LoadMenu(int menu)
     {
         m_animator.SetInteger("menu", menu);

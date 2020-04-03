@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 1901685767985091070}
   - component: {fileID: 1901685767985091068}
   - component: {fileID: 7678741256190928740}
+  - component: {fileID: 6627972336469361897}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -259,13 +260,25 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6909c5c4c6a81a244bcaa3d2589a15b6, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!225 &6627972336469361897
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901685767985091066}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4387021283197633586
 GameObject:
   m_ObjectHideFlags: 0
