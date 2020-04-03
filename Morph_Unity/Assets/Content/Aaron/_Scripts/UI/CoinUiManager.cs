@@ -49,6 +49,14 @@ public class CoinUiManager : MonoBehaviour
 		_CoinsUse.Push(_Coins.Pop());
 		CoinUi ui = _CoinsUse.Peek();
 		ui.SetFollowTransform(targetTransform);
+		
+		for (int i = 0; i < _Coins.Count; i++)
+		{
+			Vector3 targetPos = Vector3.Lerp(Vector3.zero, _Corners[2], (1f / (_Coins.Count+1)) * (i+1));
+			targetPos.y = _Offset.y;
+			_Coins.ToList()[i].SetNewPosition(targetPos);
+		}
+		
 		return true;
 	}
 	
