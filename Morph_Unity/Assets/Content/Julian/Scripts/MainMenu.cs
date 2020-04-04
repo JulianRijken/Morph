@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Playables;
 
 [RequireComponent(typeof(Animator))]
@@ -10,6 +11,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private PlayableDirector m_mainMenuDirector;
 
     private Animator m_animator;
+    private Button m_buttonToSelect;
 
     private void Awake()
     {
@@ -40,4 +42,5 @@ public class MainMenu : MonoBehaviour
     {
         m_animator.SetInteger("menu", menu);
     }
+
 }
