@@ -38,7 +38,6 @@ public class MainMenu : MonoBehaviour
 
     public void LoadMenu(int menu)
     {
-        EventSystemReceiver.Instance.SelectNewButton(menu);
         m_animator.SetInteger("menu", menu);
     }
 }
