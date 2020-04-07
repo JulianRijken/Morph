@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 3427341614645652666}
   m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -333,6 +333,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 39fb922a-99d0-45a7-ad25-815c2b7a450d
     m_ActionName: Player/Ability[/Keyboard/s,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b05f6a92-661f-4522-9fcc-264c9d755f52
+    m_ActionName: Game/Pause[/XInputControllerWindows/start,/Keyboard/escape,/Keyboard/tab]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -367,7 +371,7 @@ MonoBehaviour:
   m_birdTransformHeight: 0.5
   m_birdTransformSpeed: 5
   m_birdFlapDelayTime: 1
-  m_birdAcceleration: 20
+  m_birdAcceleration: 15
   m_birdRotateSpeed: 7
   m_blobRotateGroundCheckDistance: 100
   m_blobRotateSpeed: 6

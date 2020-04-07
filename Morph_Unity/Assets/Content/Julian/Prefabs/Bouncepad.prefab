@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635573b78b09ce64eb4b30df87754c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerTag: Player
   m_bounceForce: 30
   m_bounceInPadDirection: 1
   m_bouceDirection: {x: 0, y: 1}
