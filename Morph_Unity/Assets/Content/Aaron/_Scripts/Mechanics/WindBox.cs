@@ -23,7 +23,7 @@ namespace com.Morph.Mechanics
 			hits.ForEach(col =>
 			{
 				if (col.TryGetComponent(out Rigidbody2D rig))
-					rig.AddForce(transform.right * (_WindStrength * 10), ForceMode2D.Force);
+					rig.AddForce(transform.right * (_WindStrength * 10), ForceMode2D.Impulse);
 			});
 		}
 	}
