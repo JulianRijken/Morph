@@ -22,13 +22,6 @@ namespace com.Morph.Mechanics
 					Destroy(gameObject);
 				}
 			});
-
-			if (Input.GetKeyDown(KeyCode.C))
-			{
-				GameManager.GetInstance().AddCoin();
-				// Destroy(gameObject);
-			}
-			
 		}
 
 #if UNITY_EDITOR

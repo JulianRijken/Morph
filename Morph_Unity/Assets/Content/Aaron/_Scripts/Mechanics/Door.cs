@@ -11,13 +11,26 @@ namespace com.Morph.Mechanics
 		[SerializeField] int _CoinsRequired;
 		[SerializeField] Transform[] _CoinPositions;
 		[SerializeField] UnityEvent _OnCoinAmountReached;
+		[SerializeField] Collider2D _OpenCollider, _ClosedCollider;
 		bool _AmountReached;
 		bool _Invoked;
-		
+
+		void Start()
+		{
+			_OpenCollider.enabled = false;
+			_ClosedCollider.enabled = true;
+		}
+
 		void OnTriggerEnter2D(Collider2D other)
 		{
 			if(!other.CompareTag("Player"))
 				return;
+			
+			if (_Invoked)
+			{
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+				return;
+			}
 			
 			for (int i = 0; i < _CoinPositions.Length; i++)
 			{
@@ -30,17 +43,19 @@ namespace com.Morph.Mechanics
 
 		void Update()
 		{
-			if (!_Invoked && _AmountReached && Input.GetKeyDown(KeyCode.KeypadEnter))
+			if (!_Invoked && _AmountReached)
 			{
 				_Invoked = true;
 				_OnCoinAmountReached.Invoke();
+				_OpenCollider.enabled = true;
+				_ClosedCollider.enabled = false;
 				return;
 			}
-
-			if (_Invoked && Input.GetKeyDown(KeyCode.KeypadEnter))
-			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-			}
+			//
+			// if (_Invoked)
+			// {
+			// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			// }
 		}
 
 		void OnTriggerExit2D(Collider2D other)
