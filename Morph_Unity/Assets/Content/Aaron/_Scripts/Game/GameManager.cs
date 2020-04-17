@@ -20,7 +20,7 @@ namespace com.Morph.Game
 						Quaternion.identity, null);
 					_Instance = singletonObj.AddComponent<GameManager>();
 					singletonObj.name = "GameManager (Singleton)";
-					DontDestroyOnLoad(singletonObj);
+					// DontDestroyOnLoad(singletonObj);
 				}
 			}
 			
@@ -42,6 +42,11 @@ namespace com.Morph.Game
 		{
 			_CoinCount += amount;
 			_OnCoinAdded?.Invoke(_CoinCount);
+		}
+
+		public void OnDestroy()
+		{
+			_Instance = null;
 		}
 	}
 }
