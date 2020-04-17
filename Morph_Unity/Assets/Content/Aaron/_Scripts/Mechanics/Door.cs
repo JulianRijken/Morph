@@ -28,7 +28,7 @@ namespace com.Morph.Mechanics
 			
 			if (_Invoked)
 			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 				return;
 			}
 			
