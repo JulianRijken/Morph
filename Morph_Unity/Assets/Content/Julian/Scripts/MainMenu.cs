@@ -26,6 +26,9 @@ public class MainMenu : MonoBehaviour
         {
             m_mainMenuDirector.Stop();
             m_startGameDirector.Play();
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 

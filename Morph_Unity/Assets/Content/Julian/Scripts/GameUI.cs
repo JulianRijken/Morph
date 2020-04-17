@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,7 @@ public class GameUI : MonoBehaviour
 {
     [SerializeField] private GameObject m_mainMenu;
     [SerializeField] private GameObject m_pauseMenu;
+    [SerializeField] private Button m_resumeButton;
     // Add the pause menu en main menu en zet pause aan en uit
     private Controls m_controls;
     private bool m_gamePaused;
@@ -39,10 +41,15 @@ public class GameUI : MonoBehaviour
 
             if (paused)
             {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 Time.timeScale = 0;
+                m_resumeButton.Select();
             }
             else
             {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
                 Time.timeScale = 1;
             }
         }
