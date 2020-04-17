@@ -63,8 +63,6 @@ namespace com.Morph.Mechanics
 			if(!other.CompareTag("Player"))
 				return;
 			
-			if(_Invoked) return;
-			
 			CoinUiManager.Instance.ResetCoins();
 			_AmountReached = false;
 		}
