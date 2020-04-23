@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseMenu : MonoBehaviour
+namespace Morph.Julian
 {
-    public void Quit()
+    public class PauseMenu : MonoBehaviour
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        public void QuitGame()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }

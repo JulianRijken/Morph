@@ -4,46 +4,51 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 
-[RequireComponent(typeof(Animator))]
-public class MainMenu : MonoBehaviour
+namespace Morph.Julian
 {
-    [SerializeField] private PlayableDirector m_startGameDirector;
-    [SerializeField] private PlayableDirector m_mainMenuDirector;
 
-    private Animator m_animator;
-    private Button m_buttonToSelect;
-
-    private void Awake()
+    [RequireComponent(typeof(Animator))]
+    public class MainMenu : MonoBehaviour
     {
-        m_animator = GetComponent<Animator>();
+        [SerializeField] private PlayableDirector m_startGameDirector;
+        [SerializeField] private PlayableDirector m_mainMenuDirector;
 
-        m_mainMenuDirector.Play();
-    }
+        private Animator m_animator;
+        private Button m_buttonToSelect;
 
-    public void PlayGame()
-    {
-        if (m_animator.GetInteger("menu") == 0)
+        private void Awake()
         {
-            m_mainMenuDirector.Stop();
-            m_startGameDirector.Play();
+            m_animator = GetComponent<Animator>();
 
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            m_mainMenuDirector.Play();
         }
-    }
 
-    public void QuitGame()
-    {
-        Application.Quit();
+        public void PlayGame()
+        {
+            if (m_animator.GetInteger("menu") == 0)
+            {
+                m_mainMenuDirector.Stop();
+                m_startGameDirector.Play();
 
-        #if UNITY_EDITOR
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+
+        public void QuitGame()
+        {
+            Application.Quit();
+
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.ExitPlaymode();
-        #endif
-    }
+#endif
+        }
 
-    public void LoadMenu(int menu)
-    {
-        m_animator.SetInteger("menu", menu);
+        public void LoadMenu(int menu)
+        {
+            m_animator.SetInteger("menu", menu);
+        }
+
     }
 
 }

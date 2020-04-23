@@ -8,6 +8,9 @@ namespace Morph.Julian
     [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D), typeof(Animator))]
     public class PlayerController : MonoBehaviour
     {
+
+        #region Variable
+
         [Header("Componenets")]
         [SerializeField] private Transform m_spritesParent;
         private Rigidbody2D m_rigidbody2D;
@@ -24,7 +27,6 @@ namespace Morph.Julian
         private float m_lastRbVelocity;
         private float m_gravity;
         private bool m_holdingAbility;
-
         private enum PlayerState {BlobGround, BlobAir, BlobBall, Bird }
 
         [Header("BallMode")]
@@ -71,6 +73,9 @@ namespace Morph.Julian
         [SerializeField] private string m_jumpKey;
         [SerializeField] private string m_velocityKey;
 
+        #endregion
+
+
         #region UnityFunctions
 
         private void Awake()
@@ -89,7 +94,7 @@ namespace Morph.Julian
 
         private void FixedUpdate()
         {
-            MovementUpdate();
+            HandleMovement();
             HandleSpriteRotation();
         }
 
@@ -110,6 +115,7 @@ namespace Morph.Julian
 
 
         #endregion
+
 
         #region Input
         public void OnStrafe(InputAction.CallbackContext context)
@@ -169,6 +175,7 @@ namespace Morph.Julian
         #endregion
 
 
+        #region GeneralFunctions
 
         private void HandleSpriteRotation()
         {
@@ -216,6 +223,66 @@ namespace Morph.Julian
 
         }
 
+        private void HandleMovement()
+        {
+            
+            m_animatior.SetFloat(m_velocityKey,Mathf.Abs(m_lastRbVelocity - m_rigidbody2D.velocity.magnitude));
+            m_lastRbVelocity = m_rigidbody2D.velocity.magnitude;
+
+            m_velocity = Vector2.MoveTowards(m_velocity, Vector2.zero, Time.fixedDeltaTime * m_drag);
+
+            // Get strave input
+            float strave = m_strafeInput;
+            strave *= m_strafeSpeed;
+
+            // Get the ground hit
+            RaycastHit2D hit = GetGroundCheck();
+            m_groundHitAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+            // Get distance
+            m_groundHitDistance = m_groundOrgin.y - hit.point.y - (m_blobBoxCollider2D.size.y / 2f);
+
+            if (m_playerState == PlayerState.BlobGround || m_playerState == PlayerState.BlobAir)
+            {
+                // Get Move Velocity
+                Vector2 straveVeclocity = Vector2.zero;
+
+                if (OnGround() && !OnMaxSlope())
+                {
+                    // IF on ground
+
+                    // Apply gravity
+                    m_gravity = 0f;
+
+                    straveVeclocity = (strave * (Quaternion.Euler(0, 0, -90f) * hit.normal));
+                }
+                else
+                {
+                    // IF in air
+
+                    // Apply gravity
+                    m_gravity -= m_gravityForce * Time.fixedDeltaTime;
+
+                    straveVeclocity = Vector2.right * strave;
+                }
+
+                Vector2 move = m_velocity + straveVeclocity + (Vector2.up * m_gravity);
+                m_rigidbody2D.velocity = move;
+
+            }
+            else if(m_playerState == PlayerState.Bird)
+            {
+                m_gravity -= m_birdGravity * Time.fixedDeltaTime;
+
+                m_birdVelocity = Mathf.MoveTowards(m_birdVelocity, m_birdMoveSpeed, Time.fixedDeltaTime * m_birdAcceleration);
+
+                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * Mathf.Clamp(m_gravity,m_birdMaxGravity,100f));
+
+                m_rigidbody2D.velocity = move;
+            }
+
+        }
+
 
         private void DoJump()
         {
@@ -235,22 +302,6 @@ namespace Morph.Julian
             }
         }
 
-        private IEnumerator FlapDelay()
-        {
-            m_birdCanFlap = false;
-            yield return new WaitForSeconds(m_birdFlapDelayTime);
-            m_birdCanFlap = true;
-        }
-
-        private void SwitchSide(int side)
-        {
-            side = Mathf.Clamp(side, -1, 1);
-            Vector3 flipPos = m_spritesParent.localScale;
-            flipPos.x = side;
-            m_birdMoveSide = side;
-            m_spritesParent.localScale = flipPos;
-        }
-
         private void DoSmash()
         {
             if (m_groundHitDistance > m_smashHeight)
@@ -258,6 +309,7 @@ namespace Morph.Julian
                 m_rigidbody2D.AddForce(Vector2.down * m_smashStrength, ForceMode2D.Impulse);
             }
         }
+
 
         private void BecomeBall()
         {
@@ -299,77 +351,14 @@ namespace Morph.Julian
             DoFlap();
         }
 
-        private IEnumerator RotateBack()
+
+        private void SwitchSide(int side)
         {
-            float time = 0;
-            Quaternion oldRot = transform.rotation;
-            while (time < 1f)
-            {
-                time += Time.fixedDeltaTime * 4f;
-                transform.rotation = Quaternion.Slerp(oldRot, Quaternion.identity, time);
-                yield return new WaitForFixedUpdate();
-            }
-        }
-
-        private void MovementUpdate()
-        {
-            
-            m_animatior.SetFloat(m_velocityKey,Mathf.Abs(m_lastRbVelocity - m_rigidbody2D.velocity.magnitude));
-            m_lastRbVelocity = m_rigidbody2D.velocity.magnitude;
-
-            m_velocity = Vector2.MoveTowards(m_velocity, Vector2.zero, Time.fixedDeltaTime * m_drag);
-
-            // Get strave input
-            float strave = m_strafeInput;
-            strave *= m_strafeSpeed;
-
-            // Get the ground hit
-            RaycastHit2D hit = GroundCheck();
-            m_groundHitAngle = Vector2.Angle(hit.normal, Vector2.up);
-
-            // Get distance
-            m_groundHitDistance = m_groundOrgin.y - hit.point.y - (m_blobBoxCollider2D.size.y / 2f);
-
-            if (m_playerState == PlayerState.BlobGround || m_playerState == PlayerState.BlobAir)
-            {
-
-                // Get Move Velocity
-                Vector2 straveVeclocity = Vector2.zero;
-
-                if (OnGround() && !OnMaxSlope())
-                {
-                    // IF on ground
-
-                    // Apply gravity
-                    m_gravity = 0f;
-
-                    straveVeclocity = (strave * (Quaternion.Euler(0, 0, -90f) * hit.normal));
-                }
-                else
-                {
-                    // IF in air
-
-                    // Apply gravity
-                    m_gravity -= m_gravityForce * Time.fixedDeltaTime;
-
-                    straveVeclocity = Vector2.right * strave;
-                }
-
-                Vector2 move = m_velocity + straveVeclocity + (Vector2.up * m_gravity);
-                m_rigidbody2D.velocity = move;
-
-            }
-            else if(m_playerState == PlayerState.Bird)
-            {
-                m_gravity -= m_birdGravity * Time.fixedDeltaTime;
-
-                m_birdVelocity = Mathf.MoveTowards(m_birdVelocity, m_birdMoveSpeed, Time.fixedDeltaTime * m_birdAcceleration);
-
-                Vector2 move = m_velocity + (Vector2.right * (Mathf.Abs(m_birdVelocity) *  m_birdMoveSide)) + (Vector2.up * Mathf.Clamp(m_gravity,m_birdMaxGravity,100f));
-
-                m_rigidbody2D.velocity = move;
-            }
-
+            side = Mathf.Clamp(side, -1, 1);
+            Vector3 flipPos = m_spritesParent.localScale;
+            flipPos.x = side;
+            m_birdMoveSide = side;
+            m_spritesParent.localScale = flipPos;
         }
 
         private void SwitchMode(PlayerState toState)
@@ -396,6 +385,29 @@ namespace Morph.Julian
         }
 
 
+        private IEnumerator FlapDelay()
+        {
+            m_birdCanFlap = false;
+            yield return new WaitForSeconds(m_birdFlapDelayTime);
+            m_birdCanFlap = true;
+        }
+
+        private IEnumerator RotateBack()
+        {
+            float time = 0;
+            Quaternion oldRot = transform.rotation;
+            while (time < 1f)
+            {
+                time += Time.fixedDeltaTime * 4f;
+                transform.rotation = Quaternion.Slerp(oldRot, Quaternion.identity, time);
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
+        #endregion
+
+
+        #region ReturnFunctions
 
         private bool OnGround()
         {
@@ -407,16 +419,13 @@ namespace Morph.Julian
             return (m_groundHitAngle > m_groundMaxAngle) ? true : false;
         }
 
-        private RaycastHit2D GroundCheck()
+        private RaycastHit2D GetGroundCheck()
         {
             return Physics2D.BoxCast(m_groundOrgin, m_blobBoxCollider2D.size, 0, Vector2.down, m_groundCheckDistance, m_groundLayer);
         }
 
-
-
-
-
-
+        #endregion
 
     }
+
 }
